@@ -1,0 +1,28 @@
+<form 
+    method="GET"  
+    action="{% url 'financeiro:financeiro' %}" 
+    class="d-flex mt-2 mb-2" >          
+    <input 
+        name="ano" 
+        type="numeric" 
+        value="{{request.GET.ano}}" 
+        class="form-control me-2"
+        placeholder="informe o ano"> 
+    <input 
+        name="mes" 
+        type="numeric" 
+        value="{{request.GET.mes}}" 
+        class="form-control me-2"
+        placeholder="informe o mes">
+    <select 
+        class="form-select me-2" 
+        name="categoria_id">
+        {% for categoria in categorias %}
+            <option value= "{{categoria.id}}" > {{categoria}} </option>
+        {% endfor %}
+    </select>
+    {% if request.GET.ano %}   
+        <a class="btn btn-primary" href="{% url 'financeiro:financeiro' %}">Reset</a>                 
+    {% endif %}  
+    <button type="submit" class="btn btn-primary">Buscar</button> 
+</form> 

@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Sistema - Financeiro - Movimentos
+{% endblock title %}
+
+{% block nav-bar %}
+{% include "financeiro/nav-financeiro.html" %}
+{% endblock nav-bar %}
+
+{% block content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'sistema:home' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'sistema:sistema' %}">Aplicações</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'financeiro:financeiro' %}">Financeiro</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Movimentos</li>
+        </ol>
+    </nav>
+    <div class="d-flex justify-content-between align-items-center border-bottom border-2 border-white"> 
+        <h5>Lançamentos Diários</h5>
+        <form method="GET" action="{% url 'financeiro:movimento-create' %}">
+            <div class="input-group mb-3">
+                <button class="btn btn-primary" type="submit">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Novo
+                </button>
+            </div>
+        </form>
+    </div>
+    <form class="d-flex gap-3 mt-2" action="{% url 'financeiro:movimentos' %}" method="GET">          
+        <input name="data_inicio" type="date" value="{{request.GET.data_inicio}}" class="form-control me-2"> 
+        <input name="data_final" type="date" value="{{request.GET.data_final}}" class="form-control me-2">
+        <select class="form-select" name="conta">
+            <option value= "" selected> Todas as contas </option>
+            {% for conta in contas %}
+                <option value= "{{conta.id}}" > {{conta}} </option>
+            {% endfor %}
+        </select>
+        {% if request.GET.data_inicio %}   
+        <a class="btn btn-primary" href="{% url 'financeiro:movimentos' %}">Reset</a>                 
+        {% endif %}  
+        <button type="submit" class="btn btn-primary">Buscar</button> 
+    </form> 
+    {% if page_obj %}
+    <div class="table-responsive">
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Vencimento</th>
+                    <th scope="col">Pagamento</th>
+                    <th scope="col">Conta</th>
+                    <th scope="col">Categoria</th>
+                    <th scope="col">Pessoa</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col" class="text-end">Valor</th>
+                    <th scope="col" class="table-col-acoes">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for movimento in page_obj  %}
+                <tr>
+                    <th scope="row">{{ movimento.data_vencimento | date:'d/m/Y'}}</th>
+                    <td>{{ movimento.data_pagamento | date:'d/m/Y' }}</td>
+                    <td>{{ movimento.conta }}</td>
+                    <td>{{ movimento.categoria }}</td>
+                    <td>{{ movimento.pessoa }}</td>
+                    <td>{{ movimento.descricao | default_if_none:" "}}</td>
+                    <td>{{ movimento.get_tipo_display }}</td>
+                    <td class="text-end fw-bold">
+                        {% if movimento.tipo == 'R' %}
+                            <span class="text-success-bi">{{ movimento.valor | floatformat:2 }}</span>
+                        {% else %} 
+                            <span class="text-danger-bi">{{ movimento.valor | floatformat:2 }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="table-col-acoes">
+                        <a href="{% url 'financeiro:movimento-update' movimento.id %}">
+                            <i class="bi bi-pencil-square me-3"></i>
+                        </a>
+                        <a href="{% url 'financeiro:movimento-delete' movimento.id %}">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Não existe movimento</p>
+        {% endif %}
+    </div>
+    <div class="col-12">
+        {% include "pagination.html" %}
+    </div>
+{% endblock %}

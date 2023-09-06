@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Sistema - Financeiro - Conta
+{% endblock title %}
+
+{% block nav-bar %}
+{% include "financeiro/nav-financeiro.html" %}
+{% endblock nav-bar %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="col-md-8 col-lg-8 offset-md-2 offset-lg-2 mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'sistema:home' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'sistema:sistema' %}">Aplicações</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'financeiro:financeiro' %}">Financeiro</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'financeiro:contas' %}">Contas</a></li>
+        <li class="breadcrumb-item active" aria-current="page">
+            {% if conta %}Alteracão {% else %}Nova {% endif %}
+        </li>
+        </ol>
+    </nav>
+    <div class="pb-2 mb-2">
+        <h5>{% if conta %}Alteração de {% else %}Nova {% endif %} Conta</h5>
+    </div>
+    <div class="border border-2 border-success p-5 mb-2">
+        <form method="post" enctype="multipart/form-data" novalidate >
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        {{ form.nome | as_crispy_field }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                    {{ form.tipo | as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form.saldo_inicial | as_crispy_field }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        {{ form.logo | as_crispy_field }}
+                    </div>
+                </div>
+            </div>
+            <div class="form-buttons">
+                <button type="submit" class="btn btn-primary me-3">
+                    <i class="bi bi-check2-circle me-2"></i>
+                    Salvar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

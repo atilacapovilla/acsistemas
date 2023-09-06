@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Sistema - Financeiro - Pessoa
+{% endblock title %}
+
+{% block nav-bar %}
+{% include "financeiro/nav-financeiro.html" %}
+{% endblock nav-bar %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+    <div class="col-md-6 col-lg-6 offset-md-3 offset-lg-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'sistema:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'sistema:sistema' %}">Aplicações</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'financeiro:financeiro' %}">Financeiro</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'financeiro:pessoas' %}">Pessoas</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Exclusão</li>
+            </ol>
+        </nav>
+        <div class="border-bottom border-2 border-dark pb-2 mb-2">
+            <h5>Exclusão de Pessoa</h5>
+        </div>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="h5 mt-4 mb-4">Tem certeza que deseja excluir a pessoa ?</div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="form-label">Nome</label>
+                    <input class="form-control" type="text" value="{{ pessoa.nome }}" readonly>
+                </div>
+            </div>
+            <div class="form-buttons d-flex justify-content-between mt-5">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-x-circle me-2"></i>
+                    Confirmar Exclusão
+                </button>
+                <a href="{% url 'financeiro:pessoas' %}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-return-left me-2"></i>
+                    Retornar para Lista sem excluir
+                </a>
+            </div>            
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,67 @@
+.bg-dark-custom {
+    --bs-bg-opacity: 1;
+    background-color: #070c15!important;;
+}
+
+.bg-main-custom {
+    /* --bs-bg-opacity: 1; */
+    background-color: #070c15!important;
+    color: #06f3af;
+}
+
+.bi-custom {
+    margin-right: 10px;
+}
+
+.text-success-bi {
+    color: #06f3fa
+}
+
+.text-danger-bi {
+    color: #fa0e06
+}
+
+.container-login {
+    margin-top: 5rem;
+}
+
+.container-home {
+    margin-top: 5rem
+}
+
+.logo-login {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 3rem;
+    color: #18346c;
+    display: flex;
+    justify-content: center;
+}
+
+.titulo-login {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.table-col-logo {
+    width: 40px;
+    min-width: 20px;
+}
+
+.table-col-nome {
+    width: 600px;
+    min-width: 250px;
+}
+
+.table-col-descricao{
+    width: 100px;
+    min-width: 100px;
+}
+
+.table-col-acoes {
+    width: 100px;
+    min-width: 80px;
+    text-align: right;
+}

@@ -1,0 +1,44 @@
+{% comment %}  Gráficos Despesas Variáveis  {% endcomment %}
+<div class="col-md-6 mb-2">
+    <div class="card">
+        <div class="card-header">
+            Despesas Variáveis no Ano : {{ data_consulta | date:'Y' }}
+        </div>
+        <div class="card-body">
+            <canvas id="despesas-variaveis-ano-chart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-6 mb-2">
+    <div class="card">
+        <div class="card-header">
+            Despesas Variáveis no Mês : {{ data_consulta | date:'F/Y' }}
+        </div>
+        <div class="card-body">
+            <canvas id="despesas-variaveis-mes-chart"></canvas>
+        </div>
+    </div>
+</div>     
+{% comment %} Gráficos Despesas Categoria  {% endcomment %}
+<div class="col-md-6 mb-2">
+    <div class="card">
+        <div class="card-header">
+            Categoria {{ categoria }} no Ano : {{ data_consulta | date:'Y' }}
+        </div>
+        <div class="card-body">
+            <canvas id="despesas-categoria-chart"></canvas>
+        </div>
+    </div>
+</div>
+<div class="col-md-6 mb-2">
+    <div class="card">
+        <div class="card-header">
+            Categoria {{ categoria }} por pessoas no Mês : {{ data_consulta | date:'F/Y' }}
+        </div>
+        <div class="card-body">
+            <canvas id="despesas-pessoas-categoria-chart"></canvas>
+        </div>
+    </div>
+</div>
+ 

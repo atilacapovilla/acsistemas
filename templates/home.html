@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Sistema - Home
+{% endblock title %}
+
+{% block nav-bar %}
+    {% include "nav.html" %}
+{% endblock nav-bar %}
+
+{% block content %}
+    <div class="row gx-5 align-items-center justify-content-center">
+        <div class="col-lg-8 col-xl-7 col-xxl-6">
+            <div class="my-5 text-center text-xl-start">
+                <h1 class="display-5 fw-bolder mb-2">
+                    Sistemas Pessoais
+                </h1>
+                <p class="lead fw-normal mb-4">
+                    Sistema pessoal, conjunto de ferramentas e recursos que ajudam a organizar e
+                    gerenciar sua vida pessoal, incluindo finanças, tarefas, anotações e muito mais.
+                </p>
+                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                    <a class="btn btn-primary btn-lg px-4 me-sm-3" href="{% url 'users:login'%}">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        Login
+                    </a>
+                    <a class="btn btn-outline-primary btn-lg px-4" href="{% url 'sistema:sistema'%}">
+                        <i class="bi bi-person-plus"></i>
+                        Registrar
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center">
+            <img class="img-fluid rounded-3" src="{% static 'img/capa.png' %}" alt="..." />
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% load static %}
+
+<div class="container">
+    <a class="navbar-brand me-3" href="{% url 'sistema:home' %}">
+        AC_Sistemas
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Cadastros
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{% url 'financeiro:categorias' %}">Categorias</a></li>
+                    <li><a class="dropdown-item" href="{% url 'financeiro:contas' %}">Contas</a></li>
+                    <li><a class="dropdown-item" href="{% url 'financeiro:pessoas' %}">Pessoas</a></li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarMovimento" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Movimentação
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarMovimento">
+                    <li>
+                        <a class="dropdown-item" href="{% url 'financeiro:movimentos' %}">
+                            Lançamentos Diários
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{% url 'financeiro:transferencia' %}">
+                            Transferencias
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{% url 'financeiro:cartoes' %}">
+                            Cartões de Crédito
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarExtratos" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Extrato
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarExtratos">
+                    <li>
+                        <a class="dropdown-item" href="{% url 'financeiro:extrato-list' %}">
+                            Extrato Completo
+                        </a>
+                    </li>
+                </ul>
+            </li>
+       </ul>
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-person"></i>
+                        {{ request.user | title}}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:logout' %}">
+                        <i class="bi bi-box-arrow-right"></i>
+                        Logout
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

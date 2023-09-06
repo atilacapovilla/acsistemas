@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Sistema - Login
+{% endblock title %}
+
+{% block nav-bar %}
+    {% include "nav.html" %}
+{% endblock nav-bar %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="col-md-4 col-lg-4 offset-md-4 offset-lg-4">
+    <div class="border-bottom border-2 border-dark pb-2 mb-5">
+        <h3>Acesso para sua conta</h3>
+    </div>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% for f in form %}
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    {{ f | as_crispy_field }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="form-buttons">
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary me-3 mt-3">
+                    <i class="bi bi-check2-circle me-2"></i>
+                    Login
+                </button>
+            </div>
+            <hr>
+            <p class="mt-5">
+                Esqueceu sua senha ? 
+                <a href="#" class="text-primary fw-bold text-decoration-none">
+                    Redefina sua Senha
+                </a>
+            </p>
+            <p>
+                Não tem uma Conta ? 
+                <a href="#" class="text-primary fw-bold text-decoration-none">
+                    Registre-se
+                </a>
+            </p>
+        </div>
+    </form>
+</div>
+{% endblock %}

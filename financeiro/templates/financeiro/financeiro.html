@@ -1,0 +1,358 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Sistema - Financeiro{% endblock title %}
+
+{% block nav-bar %}
+{% include "financeiro/nav-financeiro.html" %}
+{% endblock nav-bar %}
+
+{% block content %}
+<nav aria-label="breadcrumb mt-5">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'sistema:home' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'sistema:sistema' %}">Aplicações</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Financeiro</li>
+    </ol>
+</nav>
+
+{% comment %} #####  Barra de pesquisa  ##### {% endcomment %}
+<div class="border-bottom border-2 border-success mt-3 mb-3"> 
+    <h5>Financeiro - Dashboard</h5>
+</div>
+
+{% comment %} ##### Opções ##### {% endcomment %}
+<section id="balanco" class="row">
+    {% include "financeiro/parcial/opcoes.html" %}
+</section>
+
+{% comment %} ##### Cards Balanço ##### {% endcomment %}
+<section id="balanco" class="row">
+    {% include "financeiro/parcial/balanco.html" %}
+</section>
+
+{% comment %} ##### Form de pesquisa e graficos ##### {% endcomment %}
+<section id="graficos" class="row">
+    {% include "financeiro/parcial/graficos.html" %}
+</section>
+
+{% comment %} #####  Vencidos e não Pagos  ##### {% endcomment %}
+<section id="vencidos" class="row mt-3 mb-3">
+    {% include "financeiro/parcial/vencidos.html" %}
+</section>
+
+{% comment %} ##### Saldo disponivel e Fluxo de Caixa ##### {% endcomment %}
+<section id="saldo-fluxo-caixa" class="row mt-3 mb-3">
+    {% include "financeiro/parcial/saldo-fluxo.html" %}
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+{% comment %} <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> {% endcomment %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+{% comment %} #####  grafico de despesas variáveis no ano  ##### {% endcomment %}
+<script>
+    var ctx = document.getElementById("despesas-variaveis-ano-chart");
+    var labels_ano = JSON.parse('{{ labels_ano|safe }}');
+    var data_ano = JSON.parse('{{ data_ano|safe }}');
+
+    var despesasVariaveisAnoChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels_ano,
+            datasets: [{
+                label: 'Despesas',
+                data: data_ano,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(255, 192, 192, 0.5)',
+                    'rgba(255, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1 )',
+                    'rgba(54, 162, 235,1)',
+                    'rgba(255, 206, 86,1)',
+                    'rgba(75, 192, 192,1)',
+                    'rgba(153, 102, 255,1)',
+                    'rgba(255, 159, 64,1)',
+                    'rgba(255, 99, 132,1)',
+                    'rgba(255, 162, 235,1)',
+                    'rgba(255, 206, 86,1)',
+                    'rgba(255, 192, 192,1)',
+                    'rgba(255, 102, 255,1)',
+                    'rgba(255, 159, 64,1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: false,
+                text: 'Despesas Variáveis no Ano', 
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 16
+                        }
+                    }
+                }
+            },
+            layout: {
+                padding: 0
+            }
+        }
+    });
+</script>
+
+{% comment %} #####  grafico de despesas variáveis no mes ##### {% endcomment %}
+<script>
+    var ctx = document.getElementById("despesas-variaveis-mes-chart");
+    var labels_mes = JSON.parse('{{ labels_mes|safe }}');
+    var data_mes = JSON.parse('{{ data_mes|safe }}');
+
+    var despesasVariaveisChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels_mes,
+            datasets: [{
+                label: 'Despesas',
+                data: data_mes,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(255, 192, 192, 0.5)',
+                    'rgba(255, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: false,
+                text: 'Despesas Variáveis no Mes',
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 16
+                        }
+                    }
+                }
+            },
+            layout: {
+                padding: 0
+            }
+        }
+    });
+</script>
+
+{% comment %} #####  grafico de despesas por categoria no ano  ##### {% endcomment %}
+<script>
+    var ctx = document.getElementById("despesas-categoria-chart");
+    var labels_categoria = JSON.parse('{{ labels_categoria|safe }}');
+    var data_categoria = JSON.parse('{{ data_categoria|safe }}');
+
+    var despesasCategoriaChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels_categoria,
+            datasets: [{
+                label: 'Despesas',
+                data: data_categoria,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(255, 192, 192, 0.5)',
+                    'rgba(255, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1 )',
+                    'rgba(54, 162, 235,1)',
+                    'rgba(255, 206, 86,1)',
+                    'rgba(75, 192, 192,1)',
+                    'rgba(153, 102, 255,1)',
+                    'rgba(255, 159, 64,1)',
+                    'rgba(255, 99, 132,1)',
+                    'rgba(255, 162, 235,1)',
+                    'rgba(255, 206, 86,1)',
+                    'rgba(255, 192, 192,1)',
+                    'rgba(255, 102, 255,1)',
+                    'rgba(255, 159, 64,1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: false,
+                text: 'Despesas Categoria no Ano', 
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 16
+                        }
+                    }
+                }
+            },
+            layout: {
+                padding: 0
+            }
+        }
+    });
+</script>
+
+{% comment %} #####  grafico de despesas por categoria e pessoas no mes  ##### {% endcomment %}
+<script>
+    var ctx = document.getElementById("despesas-pessoas-categoria-chart");
+    var labels_pessoa = JSON.parse('{{ labels_pessoa|safe }}');
+    var data_pessoa = JSON.parse('{{ data_pessoa|safe }}');
+
+    var despesasPessoasCategoriaChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels_pessoa,
+            datasets: [{
+                label: 'Despesas',
+                data: data_pessoa,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(255, 192, 192, 0.5)',
+                    'rgba(255, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1 )',
+                    'rgba(54, 162, 235,1)',
+                    'rgba(255, 206, 86,1)',
+                    'rgba(75, 192, 192,1)',
+                    'rgba(153, 102, 255,1)',
+                    'rgba(255, 159, 64,1)',
+                    'rgba(255, 99, 132,1)',
+                    'rgba(255, 162, 235,1)',
+                    'rgba(255, 206, 86,1)',
+                    'rgba(255, 192, 192,1)',
+                    'rgba(255, 102, 255,1)',
+                    'rgba(255, 159, 64,1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: false,
+                text: 'Despesas Pessoas por Categoria no Mes', 
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 16
+                        }
+                    }
+                }
+            },
+            layout: {
+                padding: 0
+            }
+        }
+    });
+</script>
+
+{% endblock scripts %}
