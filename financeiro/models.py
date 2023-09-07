@@ -2,6 +2,34 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 
+class Grupo(models.Model):
+    TIPO_CHOICE = (
+        ('E', 'Entradas'),
+        ('S', 'Saidas'),
+    )
+
+    GRUPO_CHOICE = (
+        ('1RE', 'Receitas'),
+        ('2RD', 'Rendimentos'),
+        ('3DF', 'Despesas Fixas'),
+        ('4DV', 'Despesas Variaveis'),
+        ('5DE', 'Despesas Extras'),
+        ('6DA', 'Despesas Adicionais'),
+        ('7TR', 'Tranferencia'),
+    )
+
+    nome = models.CharField(max_length=50)
+    tipo = models.CharField(max_length=1, choices=TIPO_CHOICE, default='S')
+    grupo = models.CharField(max_length=3, choices=GRUPO_CHOICE, default='1RE')
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.nome
+    class Meta:
+        ordering = ['tipo', 'grupo', 'nome']
+
 class Categoria(models.Model):
     TIPO_CATEGORIA_CHOICE = (
         ('FX', 'Fixa'),

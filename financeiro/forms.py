@@ -2,8 +2,20 @@ from datetime import timezone
 from django.conf import Settings
 from django.contrib.auth.models import User
 from django import forms
-from financeiro.models import Categoria, Conta, Pessoa, Movimento
+from financeiro.models import Grupo, Categoria, Conta, Pessoa, Movimento
 
+class GrupoModelForm(forms.ModelForm):
+    class Meta:
+        model = Grupo
+        fields = ['nome', 'tipo', 'grupo']
+    
+    def clean_nome(self):
+        nome = self.cleaned_data.get('nome')
+
+        if len(nome) < 3:
+            self.add_error('nome', 'O nome deve ter trẽs ou mais caracteres.')
+        return nome
+    
 
 class CategoriaModelForm(forms.ModelForm):
     class Meta:

@@ -25,6 +25,18 @@
     margin-top: 5rem;
 }
 
+.card-custom {
+    background-color: #070c15;
+    border: #06f3af solid 1px;
+    padding: 10px;
+}
+
+.card-grafico {
+    /* background-color: #abdda1; */
+    border: #06f3af solid 2px;
+    /* padding: 10px; */
+}
+
 .container-home {
     margin-top: 5rem
 }

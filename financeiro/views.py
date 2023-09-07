@@ -19,8 +19,9 @@ from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.core.paginator import Paginator
 
 
-from .models import Categoria, Conta, Pessoa, Movimento
+from .models import Grupo, Categoria, Conta, Pessoa, Movimento
 from financeiro.forms import (
+    GrupoModelForm,
     CategoriaModelForm, 
     ContaModelForm,
     PessoaModelForm, 
@@ -108,6 +109,66 @@ def financeiro(request):
     }
     return render(request, 'financeiro/financeiro.html', context)
 
+##### Grupo de Categoria #####
+class GrupoList(LoginRequiredMixin, ListView):
+    model = Grupo
+    context_object_name = 'grupos'
+    template_name = 'financeiro/grupo/list.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        grupos = Grupo.objects.filter(usuario=self.request.user).order_by('tipo', 'grupo', 'nome')
+        search = self.request.GET.get('search')
+        if search:
+            grupos = grupos.filter(nome__icontains=search)
+        return grupos
+
+class GrupoCreate(LoginRequiredMixin, CreateView):
+    model = Grupo
+    form_class = GrupoModelForm
+    template_name = 'financeiro/grupo/form.html'
+    success_url = reverse_lazy('financeiro:grupos')
+
+    def form_valid(self, form):
+        form.instance.usuario = self.request.user
+        messages.success(self.request, 'O grupo foi criado com sucesso')
+        return super(GrupoCreate, self).form_valid(form)    
+
+class GrupoUpdate(LoginRequiredMixin, UpdateView):
+    model = Grupo
+    form_class = GrupoModelForm
+    template_name = 'financeiro/grupo/form.html'
+    success_url = reverse_lazy('financeiro:grupos')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'O Grupo foi alterado com sucesso')
+        return super(GrupoUpdate, self).form_valid(form)   
+
+    def get_queryset(self):
+        base_qs = super(GrupoUpdate, self).get_queryset()
+        return base_qs.filter(usuario=self.request.user)
+
+class GrupoDelete(LoginRequiredMixin, DeleteView):
+    model = Grupo
+    template_name = 'financeiro/grupo/confirm_delete.html'
+    success_url = reverse_lazy('financeiro:grupos')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'O Grupo foi excluido com sucesso')
+        return super(GrupoDelete, self).form_valid(form)   
+    
+    def post(self, request, *args, **kwargs):
+        try:
+            return self.delete(request, *args, **kwargs)
+        except ProtectedError:
+            messages.error(request, 'Não é possível excluir este Grupo porque ele é referenciado por meio de chave protegida: Movimento.grupo')
+            return redirect('financeiro:grupos')
+
+    def get_queryset(self):
+        base_qs = super(GrupoDelete, self).get_queryset()
+        return base_qs.filter(usuario=self.request.user)
+
+
 ##### Categoria #####
 class CategoriaList(LoginRequiredMixin, ListView):
     model = Categoria
@@ -134,7 +195,6 @@ class CategoriaCreate(LoginRequiredMixin, CreateView):
         form.instance.usuario = self.request.user
         messages.success(self.request, 'A Categoria foi criada com sucesso')
         return super(CategoriaCreate, self).form_valid(form)
-
 
 # CBV - UpdateView - Alteração
 class CategoriaUpdate(LoginRequiredMixin, UpdateView):
@@ -171,6 +231,9 @@ class CategoriaDelete(LoginRequiredMixin, DeleteView):
     def get_queryset(self):
         base_qs = super(CategoriaDelete, self).get_queryset()
         return base_qs.filter(usuario=self.request.user)
+
+
+
 
 ##### Contas #####
 # CBV - ListView - Listagem

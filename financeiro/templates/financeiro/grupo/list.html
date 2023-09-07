@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Sistema - Financeiro - Grupos
+{% endblock title %}
+
+{% block nav-bar %}
+{% include "financeiro/nav-financeiro.html" %}
+{% endblock nav-bar %}
+
+{% block content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'sistema:home' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'sistema:sistema' %}">Aplicações</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'financeiro:financeiro' %}">Financeiro</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Grupos de Categoria</li>
+        </ol>
+    </nav>
+    <div class="d-flex justify-content-between align-items-center border-bottom border-2 border-dark">
+        <h5>Grupos</h5>
+        <form method="GET" action="{% url 'financeiro:grupos' %}">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Pesquisar grupo" name="search">
+                <button class="btn btn-primary" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+        <form method="GET" action="{% url 'financeiro:grupo-create' %}">
+            <div class="input-group mb-3">
+                <button class="btn btn-primary" type="submit">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Novo
+                </button>
+            </div>
+        </form>
+    </div>
+    {% if grupos %}
+    <div class="table-responsive">
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Grupo</th>
+                    <th scope="col" class="table-col-nome">Nome</th>
+                    <th scope="col">Usuário</th>
+                    <th scope="col" class="table-col-acoes">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grupo in grupos %}
+                <tr>
+                    <th scope="row">{{ grupo.id }}</th>
+                    <td>{{ grupo.get_tipo_display }}</td>
+                    <td>{{ grupo.get_grupo_display }}</td>
+                    <td class="table-col-nome">{{ grupo.nome}}</td>
+                    <td>{{ grupo.usuario}}</td>
+                    <td class="table-col-acoes">
+                        <a href="{% url 'financeiro:grupo-update' grupo.id %}">
+                            <i class="bi bi-pencil-square me-3"></i>
+                        </a>
+                        <a href="{% url 'financeiro:grupo-delete' grupo.id %}">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Não existe grupo cadastrada</p>
+        {% endif %}
+        <div class="col-12 d-flex justify-content-end">
+            {% include "paginacao.html" %}
+        </div>
+    </div>
+   
+{% endblock %}
