@@ -20,44 +20,48 @@ Sistema - Financeiro - Categoria
             <li class="breadcrumb-item active" aria-current="page">Exclusão</li>
             </ol>
         </nav>
-        <div class="border-bottom border-2 border-dark pb-2 mb-2">
-            <h5>Exclusão de Categoria</h5>
-        </div>
-        <form method="post" novalidate>
-            {% csrf_token %}
-            <div class="h5 mt-4 mb-4">Tem certeza que deseja excluir a categoria ?</div>
-            <div class="row">
-                <div class="col-md-12">
-                    <label class="form-label">Categoria</label>
-                    <input class="form-control" type="text" value="{{ categoria.nome }}" readonly>
-                </div>
-                <div class="col-md-12 mt-3">
-                    <label class="form-label">Tipo</label>
-                    <input class="form-control" type="text" value="{{ categoria.get_tipo_display }}" readonly>                       
-                </div>
-                <div class="col-md-12 mt-3">
-                    <div class="form-check">
-                        {% if categoria.essencial %}
-                            <input class="form-check-input" type="checkbox" value="" checked disabled>
-                        {% else %}
-                            <input class="form-check-input" type="checkbox" value="" disabled>
-                        {% endif %}
-                        <label class="form-check-label" for="flexCheckCheckedDisabled">
-                            Essencial
-                        </label>
-                    </div>
-                </div>
+        <div class="card shadow">
+            <div class="card-header">
+                <h5>Exclusão de Categoria</h5>
             </div>
-            <div class="form-buttons d-flex justify-content-between mt-5">
-                <button type="submit" class="btn btn-danger">
-                    <i class="bi bi-x-circle me-2"></i>
-                    Confirmar Exclusão
-                </button>
-                <a href="{% url 'financeiro:categorias' %}" class="btn btn-secondary">
-                    <i class="bi bi-arrow-return-left me-2"></i>
-                    Retornar para Lista sem excluir
-                </a>
-            </div>            
-        </form>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="h5 mt-3 mb-3">Tem certeza que deseja excluir a categoria ?</div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Categoria</label>
+                            <input class="form-control" type="text" value="{{ categoria.nome }}" disabled readonly>
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <label class="form-label">Tipo</label>
+                            <input class="form-control" type="text" value="{{ categoria.get_tipo_display }}" disabled readonly>                       
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <div class="form-check">
+                                {% if categoria.essencial %}
+                                    <input class="form-check-input" type="checkbox" value="" checked disabled>
+                                {% else %}
+                                    <input class="form-check-input" type="checkbox" value="" disabled>
+                                {% endif %}
+                                <label class="form-check-label" for="flexCheckCheckedDisabled">
+                                    Essencial
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-buttons d-flex justify-content-between mt-5">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-x-circle me-2"></i>
+                            Confirmar Exclusão
+                        </button>
+                        <a href="{% url 'financeiro:categorias' %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-return-left me-2"></i>
+                            Retornar para Lista sem excluir
+                        </a>
+                    </div>            
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock %}

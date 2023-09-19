@@ -17,59 +17,61 @@ Sistema - Financeiro - Pessoa
           <li class="breadcrumb-item active" aria-current="page">Pessoas</li>
         </ol>
     </nav>
-    <div class="d-flex justify-content-between align-items-center border-bottom border-2 border-dark">
-        <h5>Pessoas</h5>
-        <form method="GET" action="{% url 'financeiro:pessoas' %}">
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Pesquisar pessoa" name="search">
-                <button class="btn btn-primary" type="submit">
-                    <i class="bi bi-search"></i>
-                </button>
+    <div class="card shadow mb-5">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>Pessoas</h5>
+                <form method="GET" action="{% url 'financeiro:pessoas' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Pesquisar pessoa" name="search">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+                <form method="GET" action="{% url 'financeiro:pessoa-create' %}">
+                    <div class="input-group">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Nova
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
-        <form method="GET" action="{% url 'financeiro:pessoa-create' %}">
-            <div class="input-group mb-3">
-                <button class="btn btn-primary" type="submit">
-                    <i class="bi bi-plus-circle me-2"></i>
-                    Nova
-                </button>
+        </div>
+        <div class="card-body">
+            {% if pessoas %}
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="table-col-nome">Nome</th>
+                            <th scope="col" class="table-col-acoes">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pessoa in pessoas %}
+                        <tr>
+                            <td class="table-col-nome">{{ pessoa.nome}}</td>
+                            <td class="table-col-acoes">
+                                <a href="{% url 'financeiro:pessoa-update' pessoa.id %}">
+                                    <i class="bi bi-pencil-square me-3"></i>
+                                </a>
+                                <a href="{% url 'financeiro:pessoa-delete' pessoa.id %}">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>Não existe pessoa cadastrada</p>
+                {% endif %}
             </div>
-        </form>
-    </div>
-    {% if pessoas %}
-    <div class="table-responsive">
-        <table class="table table-sm table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col" class="table-col-nome">Nome</th>
-                    <th scope="col">Usuário</th>
-                    <th scope="col" class="table-col-acoes">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for pessoa in pessoas %}
-                <tr>
-                    <th scope="row">{{ pessoa.id }}</th>
-                    <td class="table-col-nome">{{ pessoa.nome}}</td>
-                    <td>{{ pessoa.usuario}}</td>
-                    <td class="table-col-acoes">
-                        <a href="{% url 'financeiro:pessoa-update' pessoa.id %}">
-                            <i class="bi bi-pencil-square me-3"></i>
-                        </a>
-                        <a href="{% url 'financeiro:pessoa-delete' pessoa.id %}">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>Não existe pessoa cadastrada</p>
-        {% endif %}
-    </div>
-    <div class="col-12 d-flex justify-content-end">
-        {% include "paginacao.html" %}
+            <div class="col-12 d-flex justify-content-end">
+                {% include "paginacao.html" %}
+            </div>
+        </div>
     </div>
 {% endblock %}

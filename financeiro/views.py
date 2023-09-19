@@ -61,16 +61,16 @@ def financeiro(request):
     categoria = Categoria.objects.get(id=categoria_id)
     contas, saldo_total, contas_outras= atualiza_saldo(request.user)
     receitas, despesas, balanco = calcula_balanco(request.user, ano, mes)
-    despesas_vencer, receitas_vencer, saldo_pendentes = calcula_pendentes(saldo_total, request.user)
+    despesas_fluxo, receitas_fluxo, saldo_pendentes = calcula_pendentes(saldo_total, request.user)
     vencidos = calcula_vencidos_não_pagos(request.user)
+     # graficos despesas mes
+    labels, data = despesas_variaveis_mes(ano, mes, request.user)
+    labels_mes = json.dumps(labels)
+    data_mes = json.dumps(data)
     # graficos variaveis ano
     labels, data = despesas_variaveis_ano(ano, mes, request.user)
     labels_ano = json.dumps(labels)
     data_ano = json.dumps(data)
-     # graficos variaveis mes
-    labels, data = despesas_variaveis_mes(ano, mes, request.user)
-    labels_mes = json.dumps(labels)
-    data_mes = json.dumps(data)
     # graficos categorias no ano
     labels, data = despesas_categoria_ano(ano, mes, categoria_id, request.user)
     labels_categoria = json.dumps(labels)
@@ -91,8 +91,8 @@ def financeiro(request):
         'despesas': despesas,
         'receitas': receitas,
         'balanco': balanco,
-        'despesas_vencer': despesas_vencer,
-        'receitas_vencer': receitas_vencer,
+        'despesas_vencer': despesas_fluxo,
+        'receitas_vencer': receitas_fluxo,
         'saldo_pendentes': saldo_pendentes,
         'vencidos': vencidos,
         'labels_ano': labels_ano,
@@ -114,7 +114,7 @@ class GrupoList(LoginRequiredMixin, ListView):
     model = Grupo
     context_object_name = 'grupos'
     template_name = 'financeiro/grupo/list.html'
-    paginate_by = 10
+    paginate_by = 50
 
     def get_queryset(self):
         grupos = Grupo.objects.filter(usuario=self.request.user).order_by('tipo', 'grupo', 'nome')
@@ -174,7 +174,7 @@ class CategoriaList(LoginRequiredMixin, ListView):
     model = Categoria
     context_object_name = 'categorias'
     template_name = 'financeiro/categoria/list.html'
-    paginate_by = 10
+    paginate_by = 50
 
     def get_queryset(self):
         categorias = Categoria.objects.filter(usuario=self.request.user).order_by('nome')
@@ -241,7 +241,7 @@ class ContasList(LoginRequiredMixin, ListView):
     model = Conta
     context_object_name = 'contas'
     template_name = 'financeiro/conta/list.html'
-    paginate_by = 10
+    paginate_by = 50
 
     def get_queryset(self):
         contas = Conta.objects.filter(usuario=self.request.user).order_by('nome')
@@ -297,7 +297,7 @@ class PessoasList(LoginRequiredMixin, ListView):
     model = Pessoa
     context_object_name = 'pessoas'
     template_name = 'financeiro/pessoa/list.html'
-    paginate_by = 10
+    paginate_by = 50
 
     def get_queryset(self):
         pessoas = Pessoa.objects.filter(usuario=self.request.user).order_by('nome')
@@ -363,12 +363,12 @@ def MovimentoList(request):
         data_final = data_inicio.replace(day=monthrange(data_inicio.year, data_inicio.month)[1])
 
     movimento = Movimento.objects.filter(
-        usuario=request.user, data_vencimento__range=[data_inicio, data_final]).order_by('data_vencimento')
+        usuario=request.user, data_vencimento__range=[data_inicio, data_final]).order_by('-data_vencimento', '-created_at')
     
     if conta:
         movimento = movimento.filter(conta__id=conta)
      
-    paginator = Paginator(movimento, 9) 
+    paginator = Paginator(movimento, 50) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
@@ -567,7 +567,7 @@ def extrato_list(request):
     despesas = movimento.filter(tipo='D').exclude(categoria__tipo='TR').aggregate(Sum('valor'))['valor__sum']
     receitas = movimento.filter(tipo='R').exclude(categoria__tipo='TR').aggregate(Sum('valor'))['valor__sum']
 
-    paginator = Paginator(movimento, 9) 
+    paginator = Paginator(movimento, 50) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {

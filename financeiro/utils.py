@@ -55,20 +55,28 @@ def calcula_balanco(usuario, ano, mes):
     return receitas, despesas, balanco
 
 def calcula_pendentes(saldo_total, usuario):
-    transacoes = Movimento.objects.filter(
+    despesas_fluxo = Movimento.objects.filter(
         usuario=usuario,
+        tipo='D',
         data_vencimento__year=today.year, 
         data_vencimento__month=today.month, 
         data_pagamento=None
-        )
-    despesas_vencer = transacoes.filter(tipo='D').aggregate(Sum('valor'))['valor__sum']
+        ).order_by('data_vencimento')
+    receitas_fluxo = Movimento.objects.filter(
+        usuario=usuario,
+        tipo='R',
+        data_vencimento__year=today.year, 
+        data_vencimento__month=today.month, 
+        data_pagamento=None
+        ).order_by('data_vencimento')
+    despesas_vencer = despesas_fluxo.aggregate(Sum('valor'))['valor__sum']
     if despesas_vencer == None:
         despesas_vencer = 0
-    receitas_vencer = transacoes.filter(tipo='R').aggregate(Sum('valor'))['valor__sum']
+    receitas_vencer = receitas_fluxo.aggregate(Sum('valor'))['valor__sum']
     if receitas_vencer == None:
         receitas_vencer = 0
     saldo_pendentes = saldo_total + (receitas_vencer or 0) - (despesas_vencer or 0)
-    return despesas_vencer, receitas_vencer, saldo_pendentes
+    return despesas_fluxo, receitas_fluxo, saldo_pendentes
 
 def calcula_vencidos_não_pagos(usuario):
     vencidos = Movimento.objects.filter(

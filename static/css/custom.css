@@ -1,12 +1,13 @@
 .bg-dark-custom {
     --bs-bg-opacity: 1;
-    background-color: #070c15!important;;
+    /* background-color: #6E707E;
 }
 
 .bg-main-custom {
     /* --bs-bg-opacity: 1; */
-    background-color: #070c15!important;
-    color: #06f3af;
+    /* background-color: #070c15!important; */
+    background-color: #264DC1;
+    color: #070c15;
 }
 
 .bi-custom {
@@ -29,12 +30,6 @@
     background-color: #070c15;
     border: #06f3af solid 1px;
     padding: 10px;
-}
-
-.card-grafico {
-    /* background-color: #abdda1; */
-    border: #06f3af solid 2px;
-    /* padding: 10px; */
 }
 
 .container-home {

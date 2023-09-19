@@ -62,7 +62,7 @@
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
   --bs-body-line-height: 1.5;
-  --bs-body-color: #fff;
+  --bs-body-color: #000;
   --bs-body-bg: #fff;
   --bs-border-width: 1px;
   --bs-border-style: solid;
@@ -2046,7 +2046,7 @@ progress {
   --bs-table-active-color: var(--bs-body-color);
   --bs-table-active-bg: rgba(0, 0, 0, 0.1);
   --bs-table-hover-color: var(--bs-body-color);
-  --bs-table-hover-bg: rgba(238, 230, 230, 0.322);
+  --bs-table-hover-bg: rgba(168, 164, 164, 0.322);
   width: 100%;
   margin-bottom: 1rem;
   color: var(--bs-table-color);

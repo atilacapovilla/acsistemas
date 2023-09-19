@@ -17,71 +17,73 @@ Sistema - Financeiro - Contas
         <li class="breadcrumb-item active" aria-current="page">Contas</li>
         </ol>
     </nav>
-    <div class="d-flex justify-content-between align-items-center border-bottom border-2 border-dark">
-        <h5>Contas</h5>
-        <form method="GET" action="{% url 'financeiro:contas' %}">
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Pesquisar conta" name="search">
-                <button class="btn btn-primary" type="submit">
-                    <i class="bi bi-search"></i>
-                </button>
+    <div class="card shadow mb-5">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>Contas</h5>
+                <form method="GET" action="{% url 'financeiro:contas' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Pesquisar conta" name="search">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+                <form method="GET" action="{% url 'financeiro:conta-create' %}">
+                    <div class="input-group">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Nova
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
-        <form method="GET" action="{% url 'financeiro:conta-create' %}">
-            <div class="input-group mb-3">
-                <button class="btn btn-primary" type="submit">
-                    <i class="bi bi-plus-circle me-2"></i>
-                    Nova
-                </button>
-            </div>
-        </form>
-    </div>
-    {% if contas %}
-    <div class="table-responsive">
-        <table class="table table-sm table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col" class="table-col-logo">Banco</th>
-                    <th scope="col" class="table-col-nome">Nome</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col" class="text-end">Saldo Inicial</th>
-                    <th scope="col">Usuário</th>
-                    <th scope="col" class="table-col-acoes">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for conta in contas %}
-                <tr>
-                    <th scope="row">{{ conta.id }}</th>
-                    <td class="table-col-logo">
-                        {% if conta.logo %}
-                        <img src="{{ conta.logo.url }}" alt="" width="32px">
-                        {% else %}
+        </div>
+        <div class="card-body">
+            {% if contas %}
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="table-col-logo">Banco</th>
+                            <th scope="col" class="table-col-nome">Nome</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col" class="text-end">Saldo Inicial</th>
+                            <th scope="col" class="table-col-acoes">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for conta in contas %}
+                        <tr>
+                            <td class="table-col-logo">
+                                {% if conta.logo %}
+                                <img src="{{ conta.logo.url }}" alt="" width="32px">
+                                {% else %}
 
-                        {% endif%}
-                    </td>
-                    <td class="table-col-nome">{{ conta.nome}}</td>
-                    <td>{{ conta.get_tipo_display }}</td>
-                    <td class="text-end">{{ conta.saldo_inicial}}</td>
-                    <td>{{ conta.usuario }}</td>
-                    <td class="table-col-acoes">
-                        <a href="{% url 'financeiro:conta-update' conta.id %}">
-                            <i class="bi bi-pencil-square me-3"></i>
-                        </a>
-                        <a href="{% url 'financeiro:conta-delete' conta.id %}">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>Não existe conta cadastrada</p>
-        {% endif %}
-    </div>
-    <div class="col-12 d-flex justify-content-end">
-        {% include "paginacao.html" %}
+                                {% endif%}
+                            </td>
+                            <td class="table-col-nome">{{ conta.nome}}</td>
+                            <td>{{ conta.get_tipo_display }}</td>
+                            <td class="text-end">{{ conta.saldo_inicial}}</td>
+                            <td class="table-col-acoes">
+                                <a href="{% url 'financeiro:conta-update' conta.id %}">
+                                    <i class="bi bi-pencil-square me-3"></i>
+                                </a>
+                                <a href="{% url 'financeiro:conta-delete' conta.id %}">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>Não existe conta cadastrada</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-12 d-flex justify-content-end">
+            {% include "paginacao.html" %}
+        </div>
     </div>
 {% endblock %}

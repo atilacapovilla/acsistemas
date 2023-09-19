@@ -22,45 +22,47 @@ Sistema - Financeiro - Conta
         </li>
         </ol>
     </nav>
-    <div class="pb-2 mb-2">
-        <h5>{% if conta %}Alteração de {% else %}Nova {% endif %} Conta</h5>
-    </div>
-    <div class="border border-2 border-success p-5 mb-2">
-        <form method="post" enctype="multipart/form-data" novalidate >
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        {{ form.nome | as_crispy_field }}
+    <div class="card shadow">
+        <div class="card-header">
+            {% if conta %}Alteração de {% else %}Nova {% endif %} Conta
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" novalidate >
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            {{ form.nome | as_crispy_field }}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                    {{ form.tipo | as_crispy_field }}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                        {{ form.tipo | as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form.saldo_inicial | as_crispy_field }}
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form.saldo_inicial | as_crispy_field }}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            {{ form.logo | as_crispy_field }}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        {{ form.logo | as_crispy_field }}
-                    </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-primary me-3">
+                        <i class="bi bi-check2-circle me-2"></i>
+                        Salvar
+                    </button>
                 </div>
-            </div>
-            <div class="form-buttons">
-                <button type="submit" class="btn btn-primary me-3">
-                    <i class="bi bi-check2-circle me-2"></i>
-                    Salvar
-                </button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

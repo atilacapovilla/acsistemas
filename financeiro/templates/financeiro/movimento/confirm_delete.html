@@ -20,67 +20,71 @@ Sistema - Financeiro - Movimento
             <li class="breadcrumb-item active" aria-current="page">Exclusão</li>
             </ol>
         </nav>
-        <div class="border-bottom border-2 border-dark pb-2 mb-2">
-            <h3>Exclusão de Movimentação</h3>
-        </div>
-        <form method="post" novalidate>
-            {% csrf_token %}
-            <div class="h5 mt-4 mb-4">Tem certeza que deseja excluir a movimentação ?</div>
-            <div class="row">
-                <div class="col-md-4">
-                    <label class="form-label">Vencimento</label>
-                    <input class="form-control" type="text" value="{{ movimento.data_vencimento | date:'d/m/Y'}}" disabled readonly>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Pagamento</label>
-                    <input class="form-control" type="text" value="{{ movimento.data_pagamento | date:'d/m/Y' }}" disabled readonly>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Tipo</label>
-                    {% if movimento.tipo == 'D' %}
-                        <input class="form-control text-danger fw-bold" type="text" value="{{ movimento.get_tipo_display }}" disabled readonly>
-                    {% elif movimento.tipo == 'R' %}
-                        <input class="form-control text-success fw-bold" type="text" value="{{ movimento.get_tipo_display }}" disabled readonly>
-                    {% else %}
-                        <input class="form-control text-warning fw-bold" type="text" value="{{ movimento.get_tipo_display }}" disabled readonly>
-                    {% endif %}
-                </div>
+        <div class="card">
+            <div class="card-header">
+                Exclusão de Movimentação
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <label class="form-label">Conta</label>
-                    <input class="form-control" type="text" value="{{ movimento.conta }}" disabled readonly>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Categoria</label>
-                    <input class="form-control" type="text" value="{{ movimento.categoria }}" disabled readonly>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Pessoa</label>
-                    <input class="form-control" type="text" value="{{ movimento.pessoa}}" disabled readonly>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-8">
-                    <label class="form-label">Descrição</label>
-                    <input class="form-control" type="text" value="{{ movimento.descricao }}" disabled readonly>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Valor</label>
-                    <input class="form-control" type="text" value="{{ movimento.valor }}" disabled readonly>
-                </div>
-            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="h5 mt-3 mb-3">Tem certeza que deseja excluir a movimentação ?</div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="form-label">Vencimento</label>
+                            <input class="form-control" type="text" value="{{ movimento.data_vencimento | date:'d/m/Y'}}" disabled readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Pagamento</label>
+                            <input class="form-control" type="text" value="{{ movimento.data_pagamento | date:'d/m/Y' }}" disabled readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Tipo</label>
+                            {% if movimento.tipo == 'D' %}
+                                <input class="form-control text-danger fw-bold" type="text" value="{{ movimento.get_tipo_display }}" disabled readonly>
+                            {% elif movimento.tipo == 'R' %}
+                                <input class="form-control text-success fw-bold" type="text" value="{{ movimento.get_tipo_display }}" disabled readonly>
+                            {% else %}
+                                <input class="form-control text-warning fw-bold" type="text" value="{{ movimento.get_tipo_display }}" disabled readonly>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="form-label">Conta</label>
+                            <input class="form-control" type="text" value="{{ movimento.conta }}" disabled readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Categoria</label>
+                            <input class="form-control" type="text" value="{{ movimento.categoria }}" disabled readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Pessoa</label>
+                            <input class="form-control" type="text" value="{{ movimento.pessoa}}" disabled readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label class="form-label">Descrição</label>
+                            <input class="form-control" type="text" value="{{ movimento.descricao }}" disabled readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Valor</label>
+                            <input class="form-control" type="text" value="{{ movimento.valor }}" disabled readonly>
+                        </div>
+                    </div>
 
-            <div class="form-buttons d-flex justify-content-between mt-5">
-                <button type="submit" class="btn btn-danger">
-                    <i class="bi bi-x-circle me-2"></i>
-                    Confirmar Exclusão
-                </button>
-                <a href="{% url 'financeiro:movimentos' %}" class="btn btn-secondary">
-                    <i class="bi bi-arrow-return-left me-2"></i>
-                    Retornar para Lista sem excluir
-                </a>
+                    <div class="form-buttons d-flex justify-content-between mt-5">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-x-circle me-2"></i>
+                            Confirmar Exclusão
+                        </button>
+                        <a href="{% url 'financeiro:movimentos' %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-return-left me-2"></i>
+                            Retornar para Lista sem excluir
+                        </a>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 {% endblock %}

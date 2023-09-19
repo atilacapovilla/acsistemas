@@ -10,159 +10,157 @@ Sistema - Financeiro - Movimentos  Cartão de Crédito
 
 {% block content %}
 {% load crispy_forms_tags %}
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'sistema:home' %}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'sistema:sistema' %}">Aplicações</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'financeiro:financeiro' %}">Financeiro</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'financeiro:movimentos' %}">Movimentos</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Cartões de Crédito</li>
-        </ol>
-    </nav>
-
-    <div class="border-bottom border-2 border-dark"> 
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'sistema:home' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'sistema:sistema' %}">Aplicações</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'financeiro:financeiro' %}">Financeiro</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'financeiro:movimentos' %}">Movimentos</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Cartões de Crédito</li>
+    </ol>
+</nav>
+<div class="card shadow mb-5">
+    <div class="card-header"> 
         <h5> Cartões de Crédito</h5>
     </div>
-    <section id="formulários" class="row mt-2">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    Informe o vencimento e o cartão
-                </div>
-                <div class="card-body">
-                    <form method="get" action="{% url 'financeiro:cartoes' %}" class="row g-3">
-                        {% csrf_token %}
-                        <div class="col-md-3">
-                            <input type="date" class="form-control me-2"  name="data-vencimento">
-                        </div>
-                        <div class="col-md-6">
-                            <select class="form-select me-2" name="conta">
-                                <option value= "" > Selecione um cartão de crédito </option>
-                                {% for conta in contas %}
-                                    <option value= "{{conta.id}}" > {{conta}} </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <button class="btn btn-primary" type="submit">
-                                <i class="bi bi-search"></i>
-                                Pesquisar
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-center">
-                <div class="card-header">
-                    Valor total em aberto 
-                </div>
-                <div class="card-body text-dark">
-                    <div class="fs-4">R$ {{ total_cartao }}</div>
+    <div class="card-body">
+        <section id="formulários" class="row mt-2">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Informe o vencimento e o cartão
+                    </div>
+                    <div class="card-body">
+                        <form method="get" action="{% url 'financeiro:cartoes' %}" class="row g-3">
+                            {% csrf_token %}
+                            <div class="col-md-3">
+                                <input type="date" class="form-control me-2"  name="data-vencimento">
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-select me-2" name="conta">
+                                    <option value= "" > Selecione um cartão de crédito </option>
+                                    {% for conta in contas %}
+                                        <option value= "{{conta.id}}" > {{conta}} </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-search"></i>
+                                    Pesquisar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div> 
-        <div class="col-md-2 mb-2">
-            {% if total_cartao %}
-            <div class="card text-center">
-                <div class="card-header">
-                    Confirmar pagamento 
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-header">
+                        Valor total em aberto 
+                    </div>
+                    <div class="card-body text-dark">
+                        <div class="fs-4">R$ {{ total_cartao }}</div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <button type="button" class="btn btn-primary" 
-                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                        <i class="bi bi-check2-circle"></i>
-                        Confirmar
-                    </button>
+            </div> 
+            <div class="col-md-3 mb-2">
+                {% if total_cartao %}
+                <div class="card text-center">
+                    <div class="card-header">
+                        Confirmar pagamento 
+                    </div>
+                    <div class="card-body">
+                        <button type="button" class="btn btn-primary" 
+                            data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            <i class="bi bi-check2-circle"></i>
+                            Confirmar
+                        </button>
+                    </div>
                 </div>
-            </div>
+                {% endif %}
+            </div> 
+        </section>
+    
+        {% if cartoes %}
+        <div class="table-responsive mb-1" id="tabela-cartao">
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Vencimento</th>
+                        <th scope="col">Pagamento</th>
+                        <th scope="col">Categoria</th>
+                        <th scope="col">Pessoa</th>
+                        <th scope="col">Descrição</th>
+                        <th scope="col" class="text-end">Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cartao in cartoes %}
+                    <tr>
+                        <th scope="row">{{ cartao.data_vencimento | date:'d/m/Y'}}</th>
+                        <td>{{ cartao.data_pagamento | date:'d/m/Y' }}</td>
+                        <td>{{ cartao.categoria }}</td>
+                        <td>{{ cartao.pessoa }}</td>
+                        <td>{{ cartao.descricao | default_if_none:" "}}</td>
+                        <td class="text-end fw-bold">
+                            {% if cartao.tipo == 'R' %}
+                                <span class="text-success">{{ cartao.valor | floatformat:2 }}</span>
+                            {% else %} 
+                                <span class="text-danger">{{ cartao.valor | floatformat:2 }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <div class="alert alert-danger" role="alert">
+                    Nenhum cartão de crédito foi selecionado ainda. Selecione um cartão para ver os lançamentos. 
+                </div>
             {% endif %}
-        </div> 
-    </section>
- 
-    {% if cartoes %}
-    <div class="table-responsive mb-1" id="tabela-cartao">
-        <table class="table table-sm table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Vencimento</th>
-                    <th scope="col">Pagamento</th>
-                    <th scope="col">Categoria</th>
-                    <th scope="col">Pessoa</th>
-                    <th scope="col">Descrição</th>
-                    <th scope="col" class="text-end">Valor</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for cartao in cartoes %}
-                <tr>
-                    <th scope="row">{{ cartao.data_vencimento | date:'d/m/Y'}}</th>
-                    <td>{{ cartao.data_pagamento | date:'d/m/Y' }}</td>
-                    <td>{{ cartao.categoria }}</td>
-                    <td>{{ cartao.pessoa }}</td>
-                    <td>{{ cartao.descricao | default_if_none:" "}}</td>
-                    <td class="text-end fw-bold">
-                        {% if cartao.tipo == 'R' %}
-                            <span class="text-success">{{ cartao.valor | floatformat:2 }}</span>
-                        {% else %} 
-                            <span class="text-danger">{{ cartao.valor | floatformat:2 }}</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-            <div class="alert alert-danger" role="alert">
-                Nenhum cartão de crédito foi selecionado ainda. Selecione um cartão para ver os lançamentos. 
-            </div>
-        {% endif %}
+        </div>
     </div>
-
-    <!-- Modal -->
+</div>  
+<!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Baixa de Cartão de Crédito</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title" id="staticBackdropLabel">Baixa de Cartão de Crédito</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <form method="post">
                 {% csrf_token %}
-                {% comment %} <div class="row"> {% endcomment %}
-                    <div class="col-md-12">
-                        <label for="data-pagamento" class="form-label">Data de Pagamento</label>
-                        <input type="date" class="form-control mb-2"  name="data-pagamento">
-                    </div>
-                    <div class="col-md-12">
-                        <label for="conta-debito" class="form-label">Conta para Débito</label>
-                        <select class="form-select mb-2" name="conta-debito">
-                            {% for conta_debito in contas_debito %}
-                                <option value= "{{conta_debito.id}}" > {{conta_debito}} </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                {% comment %} </div>
-                <div class="row"> {% endcomment %}
-                    <div class="col-md-12">
-                        <label for="categoria" class="form-label">Categoria</label>
-                        <select class="form-select me-2" name="categoria">
-                            {% for categoria in categorias %}
-                                <option value= "{{categoria.id}}" > {{categoria}} </option>
-                            {% endfor %}
-                        </select>
-                     </div>
-                     <div class="col-md-12">
-                        <label for="pessoa" class="form-label">Pessoa</label>
-                        <select class="form-select mb-3" name="pessoa">
-                            {% for pessoa in pessoas %}
-                                <option value= "{{pessoa.id}}" > {{pessoa}} </option>
-                            {% endfor %}
-                        </select>
-                     </div>
-                {% comment %} </div> {% endcomment %}
+                <div class="col-md-12">
+                    <label for="data-pagamento" class="form-label">Data de Pagamento</label>
+                    <input type="date" class="form-control mb-2"  name="data-pagamento">
+                </div>
+                <div class="col-md-12">
+                    <label for="conta-debito" class="form-label">Conta para Débito</label>
+                    <select class="form-select mb-2" name="conta-debito">
+                        {% for conta_debito in contas_debito %}
+                            <option value= "{{conta_debito.id}}" > {{conta_debito}} </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label for="categoria" class="form-label">Categoria</label>
+                    <select class="form-select me-2" name="categoria">
+                        {% for categoria in categorias %}
+                            <option value= "{{categoria.id}}" > {{categoria}} </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label for="pessoa" class="form-label">Pessoa</label>
+                    <select class="form-select mb-3" name="pessoa">
+                        {% for pessoa in pessoas %}
+                            <option value= "{{pessoa.id}}" > {{pessoa}} </option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <div class="form-buttons">
                     <button type="submit" class="btn btn-primary me-3">
                         <i class="bi bi-check2-circle me-2"></i>
@@ -170,39 +168,8 @@ Sistema - Financeiro - Movimentos  Cartão de Crédito
                     </button>
                 </div>
             </form>
-            {% comment %} <form method="post" action="{% url 'financeiro:cartoes-baixa' conta_id data_vencimento %}" class="row g-3">
-                {% csrf_token %} {% endcomment %}
-                {% comment %} <form method="post" action="{% url 'financeiro:cartoes' %}" class="row g-3">
-                    {% csrf_token %}
-                    <div class="col-md-3">
-                        <input type="date" class="form-control me-2"  name="data-vencimento">
-                    </div>
-                    <div class="col-md-6">
-                        <select class="form-select me-2" name="conta_debito">
-                            <option value= "" > Selecione um cartão de crédito </option>
-                            {% for conta in contas %}
-                                <option value= "{{conta.id}}" > {{conta}} </option>
-                            {% endfor %}
-                        </select>
-                    </div> {% endcomment %}
-                    {% comment %} <div class="col-md-3">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="bi bi-search"></i>
-                            Pesquisar
-                        </button>
-                    </div> {% endcomment %}
-                    {% comment %} <button class="btn btn-primary" type="submit">
-                        <i class="bi bi-check2-circle"></i>
-                        Confirmar
-                    </button>
-                </form> {% endcomment %}
-            </form>
         </div>
-        {% comment %} <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Understood</button>
-        </div> {% endcomment %}
       </div>
     </div>
-  </div>
+</div>
 {% endblock %}

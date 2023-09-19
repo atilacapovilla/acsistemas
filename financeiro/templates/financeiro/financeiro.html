@@ -15,20 +15,21 @@
     </ol>
 </nav>
 
-{% comment %} #####  Barra de pesquisa  ##### {% endcomment %}
-<div class="border-bottom border-2 border-success mt-3 mb-3"> 
+<div class="border-bottom border-2 border-dark mt-3 mb-3"> 
     <h5>Financeiro - Dashboard</h5>
 </div>
-
-{% comment %} ##### Opções ##### {% endcomment %}
-<section id="balanco" class="row">
-    {% include "financeiro/parcial/opcoes.html" %}
-</section>
-
-{% comment %} ##### Cards Balanço ##### {% endcomment %}
-<section id="balanco" class="row">
-    {% include "financeiro/parcial/balanco.html" %}
-</section>
+<div class="row mb-2">
+    <div class="col-md-3"> 
+        <section id="balanco">
+            {% include "financeiro/parcial/opcoes.html" %}
+        </section>
+    </div>
+    <div class="col-md-9"> 
+        <section id="balanco">
+            {% include "financeiro/parcial/balanco.html" %}
+        </section>
+    </div>
+</div>   
 
 {% comment %} ##### Form de pesquisa e graficos ##### {% endcomment %}
 <section id="graficos" class="row">
@@ -50,82 +51,6 @@
 {% block scripts %}
 {% comment %} <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> {% endcomment %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-
-{% comment %} #####  grafico de despesas variáveis no ano  ##### {% endcomment %}
-<script>
-    var ctx = document.getElementById("despesas-variaveis-ano-chart");
-    var labels_ano = JSON.parse('{{ labels_ano|safe }}');
-    var data_ano = JSON.parse('{{ data_ano|safe }}');
-
-    var despesasVariaveisAnoChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels_ano,
-            datasets: [{
-                label: 'Despesas',
-                data: data_ano,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(54, 162, 235, 0.5)',
-                    'rgba(255, 206, 86, 0.5)',
-                    'rgba(75, 192, 192, 0.5)',
-                    'rgba(153, 102, 255, 0.5)',
-                    'rgba(255, 159, 64, 0.5)',
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(255, 162, 235, 0.5)',
-                    'rgba(255, 206, 86, 0.5)',
-                    'rgba(255, 192, 192, 0.5)',
-                    'rgba(255, 102, 255, 0.5)',
-                    'rgba(255, 159, 64, 0.5)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1 )',
-                    'rgba(54, 162, 235,1)',
-                    'rgba(255, 206, 86,1)',
-                    'rgba(75, 192, 192,1)',
-                    'rgba(153, 102, 255,1)',
-                    'rgba(255, 159, 64,1)',
-                    'rgba(255, 99, 132,1)',
-                    'rgba(255, 162, 235,1)',
-                    'rgba(255, 206, 86,1)',
-                    'rgba(255, 192, 192,1)',
-                    'rgba(255, 102, 255,1)',
-                    'rgba(255, 159, 64,1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: false,
-                text: 'Despesas Variáveis no Ano', 
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            },
-            plugins: {
-                legend: {
-                    labels: {
-                        font: {
-                            size: 16
-                        }
-                    }
-                }
-            },
-            layout: {
-                padding: 0
-            }
-        }
-    });
-</script>
 
 {% comment %} #####  grafico de despesas variáveis no mes ##### {% endcomment %}
 <script>
@@ -179,6 +104,82 @@
             title: {
                 display: false,
                 text: 'Despesas Variáveis no Mes',
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 16
+                        }
+                    }
+                }
+            },
+            layout: {
+                padding: 0
+            }
+        }
+    });
+</script>
+
+{% comment %} #####  grafico de despesas variáveis no ano  ##### {% endcomment %}
+<script>
+    var ctx = document.getElementById("despesas-variaveis-ano-chart");
+    var labels_ano = JSON.parse('{{ labels_ano|safe }}');
+    var data_ano = JSON.parse('{{ data_ano|safe }}');
+
+    var despesasVariaveisAnoChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels_ano,
+            datasets: [{
+                label: 'Despesas',
+                data: data_ano,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(255, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(255, 192, 192, 0.5)',
+                    'rgba(255, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1 )',
+                    'rgba(54, 162, 235,1)',
+                    'rgba(255, 206, 86,1)',
+                    'rgba(75, 192, 192,1)',
+                    'rgba(153, 102, 255,1)',
+                    'rgba(255, 159, 64,1)',
+                    'rgba(255, 99, 132,1)',
+                    'rgba(255, 162, 235,1)',
+                    'rgba(255, 206, 86,1)',
+                    'rgba(255, 192, 192,1)',
+                    'rgba(255, 102, 255,1)',
+                    'rgba(255, 159, 64,1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: false,
+                text: 'Despesas Variáveis no Ano', 
             },
             scales: {
                 yAxes: [{

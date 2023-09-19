@@ -17,86 +17,89 @@ Sistema - Financeiro - Extratos
         <li class="breadcrumb-item active" aria-current="page">Extratos</li>
         </ol>
     </nav>
-    <div class="d-flex justify-content-between align-items-center border-bottom border-2 border-dark"> 
-        <h5>Extrato Completo</h5>
-    </div>
-    <form class="d-flex gap-3 mt-2" action="{% url 'financeiro:extrato-list' %}" method="GET">          
-        <input name="data_inicio" type="date" value="{{request.GET.data_inicio}}" class="form-control me-2"> 
-        <input name="data_final" type="date" value="{{request.GET.data_final}}" class="form-control me-2">
-        <select class="form-select" name="conta">
-            <option value= "" selected> Todas as contas </option>
-            {% for conta in contas %}
-                <option value= "{{conta.id}}" > {{conta}} </option>
-            {% endfor %}
-        </select>
-        {% if request.GET.data_inicio %}   
-        <a class="btn btn-primary" href="{% url 'financeiro:extrato-list' %}">Reset</a>                 
-        {% endif %}  
-        <button type="submit" class="btn btn-primary">Buscar</button> 
-    </form> 
-    
-    {% if page_obj %}
-    <div class="table-responsive">
-        <table class="table table-sm table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Vencimento</th>
-                    <th scope="col">Pagamento</th>
-                    <th scope="col">Conta</th>
-                    <th scope="col">Categoria</th>
-                    <th scope="col">Pessoa</th>
-                    <th scope="col">Descrição</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col" class="text-end">Receitas</th>
-                    <th scope="col" class="text-end">Despesas</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for movimento in page_obj %}
-                <tr>
-                    <th scope="row">{{ movimento.data_vencimento | date:'d/m/Y'}}</th>
-                    <td>{{ movimento.data_pagamento | date:'d/m/Y' }}</td>
-                    <td>{{ movimento.conta }}</td>
-                    <td>{{ movimento.categoria }}</td>
-                    <td>{{ movimento.pessoa }}</td>
-                    <td>{{ movimento.descricao | default_if_none:" "}}</td>
-                    <td>{{ movimento.get_tipo_display }}</td>
-                    {% if movimento.tipo == 'R' %}
-                        <td class="text-end fw-bold">
-                            <span class="text-success">{{ movimento.valor | floatformat:2 }}</span>
-                        </td>
-                        <td class="text-end fw-bold">
-                           
-                        </td>
-                    {% endif %}
-                    {% if movimento.tipo == 'D' %}
-                        <td class="text-end fw-bold">
-                           
-                        </td>
-                        <td class="text-end fw-bold">
-                            <span class="text-danger">{{ movimento.valor | floatformat:2 }}</span>
-                        </td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-                <tr>
-                    <th scope="row" colspan="7" class="table-active">
-                        Total de Receitas e Despesas ( exceto transferências )
-                    </th>
-                    <td class="text-end fw-bold table-active">
-                        <span class="text-success">{{ receitas | floatformat:2 }}</span>
-                    </td>
-                    <td class="text-end fw-bold table-active">
-                        <span class="text-danger">{{ despesas | floatformat:2 }}</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        {% else %}
-        <p>Não existe movimento</p>
-        {% endif %}
-    </div>
-    <div class="col-12">
-        {% include "pagination.html" %}
+    <div class="card shadow mb-5">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center"> 
+                Extrato Completo
+                <form class="d-flex gap-3 mt-2" action="{% url 'financeiro:extrato-list' %}" method="GET">          
+                    <input name="data_inicio" type="date" value="{{request.GET.data_inicio}}" class="form-control me-2"> 
+                    <input name="data_final" type="date" value="{{request.GET.data_final}}" class="form-control me-2">
+                    <select class="form-select" name="conta">
+                        <option value= "" selected> Todas as contas </option>
+                        {% for conta in contas %}
+                            <option value= "{{conta.id}}" > {{conta}} </option>
+                        {% endfor %}
+                    </select>
+                    {% if request.GET.data_inicio %}   
+                    <a class="btn btn-primary" href="{% url 'financeiro:extrato-list' %}">Reset</a>                 
+                    {% endif %}  
+                    <button type="submit" class="btn btn-primary">Buscar</button> 
+                </form> 
+            </div>
+        </div>
+        <div class="card-body">
+            {% if page_obj %}
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Vencimento</th>
+                            <th scope="col">Pagamento</th>
+                            <th scope="col">Conta</th>
+                            <th scope="col">Categoria</th>
+                            <th scope="col">Pessoa</th>
+                            <th scope="col">Descrição</th>
+                            <th scope="col" class="text-end">Receitas</th>
+                            <th scope="col" class="text-end">Despesas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for movimento in page_obj %}
+                        <tr>
+                            <th scope="row">{{ movimento.data_vencimento | date:'d/m/Y'}}</th>
+                            <td>{{ movimento.data_pagamento | date:'d/m/Y' }}</td>
+                            <td>{{ movimento.conta }}</td>
+                            <td>{{ movimento.categoria }}</td>
+                            <td>{{ movimento.pessoa }}</td>
+                            <td>{{ movimento.descricao | default_if_none:" "}}</td>
+                            {% if movimento.tipo == 'R' %}
+                                <td class="text-end fw-bold">
+                                    <span class="text-success">{{ movimento.valor | floatformat:2 }}</span>
+                                </td>
+                                <td class="text-end fw-bold">
+                                
+                                </td>
+                            {% endif %}
+                            {% if movimento.tipo == 'D' %}
+                                <td class="text-end fw-bold">
+                                
+                                </td>
+                                <td class="text-end fw-bold">
+                                    <span class="text-danger">{{ movimento.valor | floatformat:2 }}</span>
+                                </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <th scope="row" colspan="6" class="table-active">
+                                Total de Receitas e Despesas ( exceto transferências )
+                            </th>
+                            <td class="text-end fw-bold table-active">
+                                <span class="text-success">{{ receitas | floatformat:2 }}</span>
+                            </td>
+                            <td class="text-end fw-bold table-active">
+                                <span class="text-danger">{{ despesas | floatformat:2 }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                {% else %}
+                <p>Não existe movimento</p>
+                {% endif %}
+            </div>
+            <div class="col-12">
+                {% include "pagination.html" %}
+            </div>
+        </div>
     </div>
 {% endblock %}
