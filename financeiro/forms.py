@@ -18,7 +18,7 @@ class TipoModelForm(forms.ModelForm):
 class GrupoModelForm(forms.ModelForm):
     class Meta:
         model = Grupo
-        fields = ['tipo', 'grupo', 'nome' ]
+        fields = ['ordem', 'nome' ]
     
     def clean_nome(self):
         nome = self.cleaned_data.get('nome')

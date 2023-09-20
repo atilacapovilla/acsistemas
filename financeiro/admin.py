@@ -9,7 +9,7 @@ class Tipo(admin.ModelAdmin):
 
 @admin.register(Grupo)
 class Grupo(admin.ModelAdmin):
-    list_display = ('nome','tipo', 'grupo')
+    list_display = ('ordem', 'nome')
     
 @admin.register(Categoria)
 class CategoriaAdmin(admin.ModelAdmin):

@@ -178,7 +178,7 @@ class GrupoList(LoginRequiredMixin, ListView):
     paginate_by = 50
 
     def get_queryset(self):
-        grupos = Grupo.objects.filter(usuario=self.request.user).order_by('tipo', 'grupo', 'nome')
+        grupos = Grupo.objects.filter(usuario=self.request.user).order_by('ordem', 'nome')
         search = self.request.GET.get('search')
         if search:
             grupos = grupos.filter(nome__icontains=search)
@@ -222,7 +222,7 @@ class GrupoDelete(LoginRequiredMixin, DeleteView):
         try:
             return self.delete(request, *args, **kwargs)
         except ProtectedError:
-            messages.error(request, 'Não é possível excluir este Grupo porque ele é referenciado por meio de chave protegida: Movimento.grupo')
+            messages.error(request, 'Não é possível excluir este Grupo porque ele é referenciado por meio de chave protegida')
             return redirect('financeiro:grupos')
 
     def get_queryset(self):

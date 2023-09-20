@@ -45,8 +45,7 @@ Sistema - Financeiro - Grupos
                 <table class="table table-sm table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">Tipo</th>
-                            <th scope="col">Grupo</th>
+                            <th scope="col">Ordem</th>
                             <th scope="col" class="table-col-nome">Nome</th>
                             <th scope="col" class="table-col-acoes">Ações</th>
                         </tr>
@@ -54,14 +53,7 @@ Sistema - Financeiro - Grupos
                     <tbody>
                         {% for grupo in grupos %}
                         <tr>
-                            <td>
-                                {% if grupo.tipo == "E" %}
-                                    <span class="badge bg-success p-2">{{ grupo.get_tipo_display }}</span>
-                                {% else %}
-                                    <span class="badge bg-danger p-2">{{ grupo.get_tipo_display }}</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ grupo.get_grupo_display }}</td>
+                            <td>{{ grupo.ordem }}</td>
                             <td class="table-col-nome">{{ grupo.nome}}</td>
                             <td class="table-col-acoes">
                                 <a href="{% url 'financeiro:grupo-update' grupo.id %}">
@@ -76,7 +68,7 @@ Sistema - Financeiro - Grupos
                     </tbody>
                 </table>
                 {% else %}
-                <p>Não existe grupo cadastrada</p>
+                <p>Não existe grupo cadastrado</p>
                 {% endif %}
                 <div class="col-12 d-flex justify-content-end">
                     {% include "paginacao.html" %}

@@ -15,11 +15,7 @@ class Tipo(models.Model):
         ordering = ['ordem', 'nome']
 
 class Grupo(models.Model):
-    TIPO_CHOICE = (
-        ('E', 'Entradas'),
-        ('S', 'Saidas'),
-    )
-
+    
     GRUPO_CHOICE = (
         ('1RE', 'Receitas'),
         ('2RD', 'Rendimentos'),
@@ -31,8 +27,7 @@ class Grupo(models.Model):
     )
 
     nome = models.CharField(max_length=50)
-    tipo = models.CharField(max_length=1, choices=TIPO_CHOICE, default='S')
-    grupo = models.CharField(max_length=3, choices=GRUPO_CHOICE, default='1RE')
+    ordem = models.IntegerField(null=False, blank=False)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -40,7 +35,7 @@ class Grupo(models.Model):
     def __str__(self):
         return self.nome
     class Meta:
-        ordering = ['tipo', 'grupo', 'nome']
+        ordering = ['ordem', 'nome']
 
 class Categoria(models.Model):
     TIPO_CATEGORIA_CHOICE = (
