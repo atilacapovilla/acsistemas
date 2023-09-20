@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import Grupo, Categoria, Conta, Pessoa, Movimento
+from .models import Tipo, Grupo, Categoria, Conta, Pessoa, Movimento
+
+
+@admin.register(Tipo)
+class Tipo(admin.ModelAdmin):
+    list_display = ('ordem', 'nome')
+    
 
 @admin.register(Grupo)
 class Grupo(admin.ModelAdmin):

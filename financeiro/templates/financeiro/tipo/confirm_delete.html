@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Sistema - Financeiro - Tipo
+{% endblock title %}
+
+{% block nav-bar %}
+{% include "financeiro/nav-financeiro.html" %}
+{% endblock nav-bar %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+    <div class="col-md-6 col-lg-6 offset-md-3 offset-lg-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'sistema:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'sistema:sistema' %}">Aplicações</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'financeiro:financeiro' %}">Financeiro</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'financeiro:tipos' %}">Tipos</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Exclusão</li>
+            </ol>
+        </nav>
+        <div class="card shadow">
+            <div class="card-header">
+                Exclusão de Tipo
+            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="h5 mt-3 mb-3">Tem certeza que deseja excluir o tipo ?</div>
+                    <div class="row">
+                        <div class="col-md-12 mt-3">
+                            <label class="form-label">Ordem</label>
+                            <input class="form-control" type="text" value="{{ tipo.ordem }}" disabled readonly>                       
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Nome</label>
+                            <input class="form-control" type="text" value="{{ tipo.nome }}" disabled readonly>
+                        </div>
+                    </div>
+                    <div class="form-buttons d-flex justify-content-between mt-5">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-x-circle me-2"></i>
+                            Confirmar Exclusão
+                        </button>
+                        <a href="{% url 'financeiro:tipos' %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-return-left me-2"></i>
+                            Retornar para Lista sem excluir
+                        </a>
+                    </div>            
+                </form>
+            </div>  
+        </div>
+    </div>
+{% endblock %}

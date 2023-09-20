@@ -19,8 +19,9 @@ from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.core.paginator import Paginator
 
 
-from .models import Grupo, Categoria, Conta, Pessoa, Movimento
+from .models import Tipo, Grupo, Categoria, Conta, Pessoa, Movimento
 from financeiro.forms import (
+    TipoModelForm,
     GrupoModelForm,
     CategoriaModelForm, 
     ContaModelForm,
@@ -108,6 +109,66 @@ def financeiro(request):
         'data_pessoa': data_pessoa,
     }
     return render(request, 'financeiro/financeiro.html', context)
+
+##### Tipo de Categoria #####
+class TipoList(LoginRequiredMixin, ListView):
+    model = Tipo
+    context_object_name = 'tipos'
+    template_name = 'financeiro/tipo/list.html'
+    paginate_by = 50
+
+    def get_queryset(self):
+        tipos = Tipo.objects.filter(usuario=self.request.user).order_by('ordem', 'nome')
+        search = self.request.GET.get('search')
+        if search:
+            tipos = tipos.filter(nome__icontains=search)
+        return tipos
+
+class TipoCreate(LoginRequiredMixin, CreateView):
+    model = Tipo
+    form_class = TipoModelForm
+    template_name = 'financeiro/tipo/form.html'
+    success_url = reverse_lazy('financeiro:tipos')
+
+    def form_valid(self, form):
+        form.instance.usuario = self.request.user
+        messages.success(self.request, 'O Tipo foi criado com sucesso')
+        return super(TipoCreate, self).form_valid(form)    
+
+class TipoUpdate(LoginRequiredMixin, UpdateView):
+    model = Tipo
+    form_class = TipoModelForm
+    template_name = 'financeiro/tipo/form.html'
+    success_url = reverse_lazy('financeiro:tipos')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'O Tipo foi alterado com sucesso')
+        return super(TipoUpdate, self).form_valid(form)   
+
+    def get_queryset(self):
+        base_qs = super(TipoUpdate, self).get_queryset()
+        return base_qs.filter(usuario=self.request.user)
+
+class TipoDelete(LoginRequiredMixin, DeleteView):
+    model = Tipo
+    template_name = 'financeiro/tipo/confirm_delete.html'
+    success_url = reverse_lazy('financeiro:tipos')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'O Tipo foi excluido com sucesso')
+        return super(TipoDelete, self).form_valid(form)   
+    
+    def post(self, request, *args, **kwargs):
+        try:
+            return self.delete(request, *args, **kwargs)
+        except ProtectedError:
+            messages.error(request, 'Não é possível excluir este Tipo porque ele é referenciado por meio de chave protegida')
+            return redirect('financeiro:tipos')
+
+    def get_queryset(self):
+        base_qs = super(TipoDelete, self).get_queryset()
+        return base_qs.filter(usuario=self.request.user)
+
 
 ##### Grupo de Categoria #####
 class GrupoList(LoginRequiredMixin, ListView):

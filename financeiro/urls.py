@@ -1,6 +1,10 @@
 from django.urls import path
 from .views import (
     financeiro,
+    TipoList,
+    TipoCreate,
+    TipoUpdate,
+    TipoDelete,
     GrupoList,
     GrupoCreate,
     GrupoUpdate, 
@@ -31,6 +35,11 @@ app_name = 'financeiro'
 
 urlpatterns = [
     path('', financeiro, name='financeiro'),
+    # Tipo
+    path('tipos/', TipoList.as_view(), name='tipos'),
+    path('tipo/create/', TipoCreate.as_view(), name='tipo-create'),
+    path('tipo/update/<int:pk>', TipoUpdate.as_view(), name='tipo-update'),
+    path('tipo/delete/<int:pk>', TipoDelete.as_view(), name='tipo-delete'),
     # Grupo
     path('grupos/', GrupoList.as_view(), name='grupos'),
     path('grupo/create/', GrupoCreate.as_view(), name='grupo-create'),

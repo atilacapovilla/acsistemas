@@ -17,7 +17,17 @@
                     Cadastros
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="{% url 'financeiro:grupos' %}">Grupos de Melhor
+                    <li><a class="dropdown-item" href="{% url 'financeiro:tipos' %}">Tipos de Categorias</a></li>
+                    <li><a class="dropdown-item" href="{% url 'financeiro:grupos' %}">Grupos de Categorias</a></li>
+                    <li><a class="dropdown-item" href="{% url 'financeiro:categorias' %}">Categorias</a></li>
+                    <li><a class="dropdown-item" href="{% url 'financeiro:contas' %}">Contas</a></li>
+                    <li><a class="dropdown-item" href="{% url 'financeiro:pessoas' %}">Pessoas</a></li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarMovimento" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Movimentação
+                </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarMovimento">
                     <li>
                         <a class="dropdown-item" href="{% url 'financeiro:movimentos' %}">
