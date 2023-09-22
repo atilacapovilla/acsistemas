@@ -30,8 +30,8 @@ Sistema - Financeiro - Grupo
                     <div class="h5 mt-3 mb-3">Tem certeza que deseja excluir o grupo ?</div>
                     <div class="row">
                         <div class="col-md-12 mt-3">
-                            <label class="form-label">Ordem</label>
-                            <input class="form-control" type="text" value="{{ grupo.ordem }}" disabled readonly>                       
+                            <label class="form-label">Tipo</label>
+                            <input class="form-control" type="text" value="{{ grupo.get_tipo_display }}" disabled readonly>                       
                         </div>
                         <div class="col-md-12">
                             <label class="form-label">Nome</label>

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Sistema - Financeiro - Planejamento
+{% endblock title %}
+
+{% block nav-bar %}
+{% include "financeiro/nav-financeiro.html" %}
+{% endblock nav-bar %}
+
+{% block content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'sistema:home' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'sistema:sistema' %}">Aplicações</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'financeiro:financeiro' %}">Financeiro</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Planejamento</li>
+        </ol>
+    </nav>
+    <div class="card shadow mb-5">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5>Planejamento</h5>
+            {% comment %} <form method="GET" action="{% url 'financeiro:categorias' %}">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Pesquisar categoria" name="search">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+            <form method="GET" action="{% url 'financeiro:categoria-create' %}">
+                <div class="input-group">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-plus-circle"></i>
+                        Nova
+                    </button>
+                </div>
+            </form> {% endcomment %}
+        </div>
+        <div class="card-body">
+            {% if grupos %}
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Grupo</th>
+                            <th scope="col" class="table-col-nome">Nome</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col" class="table-col-acoes">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for grupo in grupos %}
+                        <tr class='tr-grupo'>
+                            <td colspan="4">{{ grupo.nome }}</td>
+                        </tr>
+                            {% for cat in grupo.grupos.all %}
+                            <tr> 
+                                <td></td>
+                                <td class="table-col-nome">{{ cat.nome}}</td>
+                                <td>
+                                    <input 
+                                        id="valor-categoria-{{cat.id}}" 
+                                        type="text" 
+                                        class="form-control form-control-sm" 
+                                        value="{{cat.valor_planejamento}}"></td>
+                                </td>
+                                <td class="table-col-acoes">
+                                    <button 
+                                        onclick="update_valor_planejamento_categoria({{cat.id}})" 
+                                        class="btn btn-sm btn-primary">
+                                        Salvar
+                                    </button>
+                                </td> 
+                            </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>Não existe categoria cadastrada</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function update_valor_planejamento_categoria(id){
+            valor = document.getElementById('valor-categoria-'+id).value
+            console.log(valor)
+            fetch("/financeiro/update_valor_categoria/"+id, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",   
+                },
+                body: JSON.stringify({novo_valor: valor})
+            }).then(function(result){
+                return result.json()
+            }).then(function(data){
+                console.log(data)
+            })
+        }
+    </script>
+
+{% endblock %}

@@ -1,11 +1,5 @@
 .bg-dark-custom {
     --bs-bg-opacity: 1;
-    /* background-color: #6E707E;
-}
-
-.bg-main-custom {
-    /* --bs-bg-opacity: 1; */
-    /* background-color: #070c15!important; */
     background-color: #264DC1;
     color: #070c15;
 }
@@ -71,4 +65,9 @@
     width: 100px;
     min-width: 80px;
     text-align: right;
+}
+
+.tr-grupo {
+    background-color: #a09e9e;
+    font-size: large;
 }

@@ -28,7 +28,9 @@ from .views import (
     PagamentoUpdate,
     Transferencia,
     CartoesList,
-    extrato_list
+    extrato_list,
+    definir_planejamento,
+    update_valor_categoria,
 )
 
 app_name = 'financeiro'
@@ -73,4 +75,7 @@ urlpatterns = [
     path('cartoes/', CartoesList, name='cartoes'),
     # extratos
     path('extrato_list/', extrato_list, name='extrato-list'), 
+     # ḉanejamento
+    path('definir_planejamento/', definir_planejamento, name='definir_planejamento'), 
+    path('update_valor_categoria/<int:id>', update_valor_categoria, name="update_valor_categoria"),
 ]

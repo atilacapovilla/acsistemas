@@ -15,19 +15,14 @@ class Tipo(models.Model):
         ordering = ['ordem', 'nome']
 
 class Grupo(models.Model):
-    
-    GRUPO_CHOICE = (
-        ('1RE', 'Receitas'),
-        ('2RD', 'Rendimentos'),
-        ('3DF', 'Despesas Fixas'),
-        ('4DV', 'Despesas Variaveis'),
-        ('5DE', 'Despesas Extras'),
-        ('6DA', 'Despesas Adicionais'),
-        ('7TR', 'Tranferencia'),
+    TIPO_GRUPO_CHOICE = (
+        ('E', 'Entrada'),
+        ('I', 'Investimento'),
+        ('S', 'Saida'),
+        ('T', 'Tranferencia'),
     )
-
     nome = models.CharField(max_length=50)
-    ordem = models.IntegerField(null=False, blank=False)
+    tipo = models.CharField(max_length=2, choices=TIPO_GRUPO_CHOICE, default='S')
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -35,7 +30,7 @@ class Grupo(models.Model):
     def __str__(self):
         return self.nome
     class Meta:
-        ordering = ['ordem', 'nome']
+        ordering = ['tipo', 'nome']
 
 class Categoria(models.Model):
     TIPO_CATEGORIA_CHOICE = (
@@ -44,18 +39,20 @@ class Categoria(models.Model):
         ('TR', 'Tranferencia'),
         ('RD', 'Rendimentos'),
     )
-    nome = models.CharField(max_length=50)
+
     tipo = models.CharField(max_length=2, choices=TIPO_CATEGORIA_CHOICE, default='VR')
-    essencial = models.BooleanField(default=True)
+    grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE, related_name='grupos')
+    nome = models.CharField(max_length=50)
+    valor_planejamento = models.DecimalField(max_digits=10, decimal_places=2, default='0.00')
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.nome}-({self.tipo})'
+        return f'{self.nome}'
     
     class Meta:
-        ordering = ['nome']
+        ordering = ['grupo', 'nome']
 
 class Conta(models.Model):
     TIPO_CONTA_CHOICE = (
@@ -114,4 +111,3 @@ class Movimento(models.Model):
     
     class Meta:
         ordering = ['-data_vencimento', 'data_pagamento', 'tipo']
-

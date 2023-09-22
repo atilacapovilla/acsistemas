@@ -45,7 +45,7 @@ Sistema - Financeiro - Grupos
                 <table class="table table-sm table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">Ordem</th>
+                            <th scope="col">Tipo</th>
                             <th scope="col" class="table-col-nome">Nome</th>
                             <th scope="col" class="table-col-acoes">Ações</th>
                         </tr>
@@ -53,7 +53,7 @@ Sistema - Financeiro - Grupos
                     <tbody>
                         {% for grupo in grupos %}
                         <tr>
-                            <td>{{ grupo.ordem }}</td>
+                            <td>{{ grupo.get_tipo_display }}</td>
                             <td class="table-col-nome">{{ grupo.nome}}</td>
                             <td class="table-col-acoes">
                                 <a href="{% url 'financeiro:grupo-update' grupo.id %}">

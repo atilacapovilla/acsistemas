@@ -18,7 +18,7 @@ class TipoModelForm(forms.ModelForm):
 class GrupoModelForm(forms.ModelForm):
     class Meta:
         model = Grupo
-        fields = ['ordem', 'nome' ]
+        fields = ['tipo', 'nome' ]
     
     def clean_nome(self):
         nome = self.cleaned_data.get('nome')
@@ -28,9 +28,13 @@ class GrupoModelForm(forms.ModelForm):
     
 
 class CategoriaModelForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CategoriaModelForm, self).__init__(*args, **kwargs)
+        usuario = kwargs['initial']['usuario']
+        self.fields['grupo'].queryset = Grupo.objects.filter(usuario=usuario)
     class Meta:
         model = Categoria
-        fields = ['nome', 'tipo', 'essencial']
+        fields = ['tipo', 'grupo', 'nome']
     
     def clean_nome(self):
         nome = self.cleaned_data.get('nome')

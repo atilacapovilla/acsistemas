@@ -17,6 +17,7 @@ from django.db.models import ProtectedError
 from django.db.models import Q
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.core.paginator import Paginator
+from django.views.decorators.csrf import csrf_exempt
 
 
 from .models import Tipo, Grupo, Categoria, Conta, Pessoa, Movimento
@@ -178,7 +179,7 @@ class GrupoList(LoginRequiredMixin, ListView):
     paginate_by = 50
 
     def get_queryset(self):
-        grupos = Grupo.objects.filter(usuario=self.request.user).order_by('ordem', 'nome')
+        grupos = Grupo.objects.filter(usuario=self.request.user).order_by('tipo', 'nome')
         search = self.request.GET.get('search')
         if search:
             grupos = grupos.filter(nome__icontains=search)
@@ -252,6 +253,9 @@ class CategoriaCreate(LoginRequiredMixin, CreateView):
     template_name = 'financeiro/categoria/form.html'
     success_url = reverse_lazy('financeiro:categorias')
 
+    def get_initial(self):
+        return {'usuario':self.request.user}
+    
     def form_valid(self, form):
         form.instance.usuario = self.request.user
         messages.success(self.request, 'A Categoria foi criada com sucesso')
@@ -263,6 +267,9 @@ class CategoriaUpdate(LoginRequiredMixin, UpdateView):
     form_class = CategoriaModelForm
     template_name = 'financeiro/categoria/form.html'
     success_url = reverse_lazy('financeiro:categorias')
+
+    def get_initial(self):
+        return {'usuario':self.request.user}
 
     def form_valid(self, form):
         messages.success(self.request, 'A Categoria foi alterada com sucesso')
@@ -638,3 +645,22 @@ def extrato_list(request):
         'receitas': receitas,
     }
     return render(request, template_name, context)
+
+def definir_planejamento(request):
+    template_name = 'financeiro/planejamento/definir_planejamento.html'
+    excludes = ['I', 'T']
+    grupos = Grupo.objects.filter(usuario=request.user).exclude(tipo__in=excludes).order_by('tipo', '-nome')
+
+    context = {
+        'grupos': grupos,
+    }
+    return render(request, template_name, context)
+
+@csrf_exempt
+def update_valor_categoria(request, id):
+    novo_valor = json.load(request)['novo_valor']
+    categoria = Categoria.objects.get(id=id)
+    categoria.valor_planejamento = novo_valor
+    categoria.save()
+
+    return JsonResponse({'status': 'Sucesso'})
