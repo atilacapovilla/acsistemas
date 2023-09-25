@@ -52,7 +52,7 @@ class Categoria(models.Model):
         return f'{self.nome}'
     
     class Meta:
-        ordering = ['grupo', 'nome']
+        ordering = ['nome']
 
 class Conta(models.Model):
     TIPO_CONTA_CHOICE = (

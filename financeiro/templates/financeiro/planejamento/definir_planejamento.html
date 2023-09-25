@@ -87,7 +87,6 @@ Sistema - Financeiro - Planejamento
     <script>
         function update_valor_planejamento_categoria(id){
             valor = document.getElementById('valor-categoria-'+id).value
-            console.log(valor)
             fetch("/financeiro/update_valor_categoria/"+id, {
                 method: 'POST',
                 headers: {
