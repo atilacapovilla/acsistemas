@@ -14,6 +14,14 @@ def despesas_variaveis_ano(ano, mes, usuario):
     transacoes = transacoes.values(
         'data_pagamento__month').annotate(total_despesas=Sum('valor')).order_by('data_pagamento__month')
     
+    # teste = transacoes.values(
+    #     'categoria__grupo__nome','categoria__nome','data_pagamento__month').annotate(
+    #         total_despesas=Sum('valor')).order_by(
+    #             'categoria__grupo__nome', 'categoria__nome', 'data_pagamento__month')
+    # for t in teste:
+    #     print(t['categoria__grupo__nome'],t['categoria__nome'], t['data_pagamento__month'], t['total_despesas'])
+
+
     for entry in transacoes:
         mes = entry['data_pagamento__month']
         mes_str = tabela_meses[mes - 1]
@@ -49,8 +57,10 @@ def despesas_categoria_ano(ano, mes, categoria_id, usuario):
         categoria=categoria_id,
         data_pagamento__year=ano,
     )
+
     transacoes = transacoes.values(
         'data_pagamento__month').annotate(total_despesas=Sum('valor')).order_by('data_pagamento__month')
+    
     
     for entry in transacoes:
         mes = entry['data_pagamento__month']

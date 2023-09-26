@@ -664,3 +664,12 @@ def update_valor_categoria(request, id):
     categoria.save()
 
     return JsonResponse({'status': 'Sucesso'})
+
+def ver_planejamento(request):
+    template_name = 'financeiro/planejamento/ver_planejamento.html'
+    excludes = ['I', 'T']
+    grupos = Grupo.objects.filter(usuario=request.user).exclude(tipo__in=excludes).order_by('tipo', '-nome')
+    context = {
+        'grupos': grupos,
+    }
+    return render(request, template_name, context)

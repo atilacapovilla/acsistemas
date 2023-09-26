@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.contrib.auth.models import User
 from datetime import datetime
 
@@ -29,6 +30,18 @@ class Grupo(models.Model):
 
     def __str__(self):
         return self.nome
+    
+    def total_planejamento_grupo(self):
+        valores = Categoria.objects.filter(grupo__id = self.id).aggregate(Sum('valor_planejamento'))
+        return valores['valor_planejamento__sum'] if valores['valor_planejamento__sum'] else 0
+    
+    def total_gasto_grupo(self):
+        valores = Movimento.objects.filter(
+            categoria__grupo__id = self.id).filter(
+                data_pagamento__year=datetime.now().year, 
+                data_pagamento__month=datetime.now().month).aggregate(Sum('valor'))
+        return valores['valor__sum'] if valores['valor__sum'] else 0
+    
     class Meta:
         ordering = ['tipo', 'nome']
 
@@ -50,6 +63,21 @@ class Categoria(models.Model):
 
     def __str__(self):
         return f'{self.nome}'
+    
+    def total_gasto(self):
+        valores = Movimento.objects.filter(
+            categoria__id = self.id).filter(
+                data_pagamento__year=datetime.now().year, 
+                data_pagamento__month=datetime.now().month).aggregate(Sum('valor'))
+        return valores['valor__sum'] if valores['valor__sum'] else 0
+    
+    def calcula_percentual_gasto_por_categoria(self):
+        total_gasto = self.total_gasto()
+        if total_gasto == 0 or self.valor_planejamento == 0:
+            percentual = 0
+        else:
+            percentual =  (total_gasto * 100) / self.valor_planejamento 
+        return percentual
     
     class Meta:
         ordering = ['nome']

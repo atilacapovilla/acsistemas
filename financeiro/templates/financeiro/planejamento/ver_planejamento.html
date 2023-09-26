@@ -19,7 +19,7 @@ Sistema - Financeiro - Planejamento
     </nav>
     <div class="card shadow mb-5">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5>Definir Planejamento</h5>
+            <h5>Planejamento Mensal</h5>
         </div>
         <div class="card-body">
             {% if grupos %}
@@ -29,35 +29,44 @@ Sistema - Financeiro - Planejamento
                         <tr>
                             <th scope="col">Grupo</th>
                             <th scope="col" class="table-col-nome">Nome</th>
-                            <th scope="col">Valor</th>
-                            <th scope="col" class="table-col-acoes">Ações</th>
+                            <th scope="col" class="text-end">Valor Planejado</th>
+                            <th scope="col" class="text-end">Valor Realizado</th>
+                            <th scope="col" class="text-end">Percentual</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for grupo in grupos %}
-                        <tr class='tr-grupo'>
-                            <td colspan="4">{{ grupo.nome }}</td>
+                        <tr class='text-primary fs-4'>
+                            <td colspan="5">{{ grupo.nome }}</td>
                         </tr>
                             {% for cat in grupo.grupos.all %}
                             <tr> 
                                 <td></td>
                                 <td class="table-col-nome">{{ cat.nome}}</td>
-                                <td>
-                                    <input 
-                                        id="valor-categoria-{{cat.id}}" 
-                                        type="text" 
-                                        class="form-control form-control-sm" 
-                                        value="{{cat.valor_planejamento}}">
+                                <td class="text-end fw-bold">
+                                    <span class="text-success">{{ cat.valor_planejamento | floatformat:2 }}</span>
                                 </td>
-                                <td class="table-col-acoes">
-                                    <button 
-                                        onclick="update_valor_planejamento_categoria({{cat.id}})" 
-                                        class="btn btn-sm btn-primary">
-                                        Salvar
-                                    </button>
+                                <td class="text-end fw-bold">
+                                    <span class="text-success">{{ cat.total_gasto | floatformat:2 }}</span>
+                                </td>    
+                                <td class="text-end fw-bold">
+                                    <span class="text-success">{{ cat.calcula_percentual_gasto_por_categoria  | floatformat:2 }} %</span>
                                 </td> 
                             </tr>
                             {% endfor %}
+                            <tr class='tr-grupo'>
+                                <td></td>
+                                <td>Total do Grupo : {{ grupo.nome }}</td>
+                                <td class="text-end fw-bold">
+                                    <span class="text-success">{{ grupo.total_planejamento_grupo | floatformat:2 }}</span>
+                                </td>
+                                <td class="text-end fw-bold">
+                                    <span class="text-success">{{ grupo.total_gasto_grupo | floatformat:2 }}</span>
+                                </td>
+                                <td class="text-end fw-bold">
+                                    {% comment %} <span class="text-success">{{ grupo.total_gasto_grupo | floatformat:2 }}</span> {% endcomment %}
+                                </td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
