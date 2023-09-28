@@ -35,7 +35,7 @@ Sistema - Financeiro - Planejamento
                     </thead>
                     <tbody>
                         {% for grupo in grupos %}
-                        <tr class='tr-grupo'>
+                        <tr class="text-primary fs-5">
                             <td colspan="4">{{ grupo.nome }}</td>
                         </tr>
                             {% for cat in grupo.grupos.all %}

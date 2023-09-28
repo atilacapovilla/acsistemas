@@ -614,7 +614,7 @@ def CartoesList(request):
     return render(request, template_name, context)
 
 def extrato_list(request):
-    template_name = 'financeiro/movimento/extrato_list.html'
+    template_name = 'financeiro/extrato/extrato_list.html'
     contas = Conta.objects.filter(usuario=request.user).order_by('nome')
 
     data_inicio = request.GET.get('data_inicio')
@@ -643,6 +643,53 @@ def extrato_list(request):
         'page_obj': page_obj,
         'despesas': despesas,
         'receitas': receitas,
+    }
+    return render(request, template_name, context)
+
+def extrato_mensal(request):
+    template_name = 'financeiro/extrato/extrato_mensal.html'
+    contas = Conta.objects.filter(usuario=request.user).order_by('nome')
+    grupos = Grupo.objects.filter(usuario=request.user).exclude(tipo='T').order_by('tipo', '-nome')
+
+    ano = request.GET.get('ano')
+    conta = request.GET.get('conta')
+
+    if not ano:
+        today = date.today()
+        ano = today.year
+
+    movimento = Movimento.objects.filter(
+        usuario=request.user, 
+        data_pagamento__year=ano
+        ).exclude(
+            categoria__tipo='TR'
+            )
+    
+    if conta:
+        movimento = movimento.filter(conta__id=conta)
+        
+    despesas = movimento.filter(tipo='D')
+    receitas = movimento.filter(tipo='R')
+
+    relatorio = {}
+    for grupo in grupos:
+        relatorio[grupo.nome]= {}
+        for categoria in grupo.grupos.all():
+            relatorio[grupo.nome][categoria.nome]= {}  
+            for mes in range(1 , 13):
+                despesas_mes = despesas.filter(data_pagamento__month=mes, categoria=categoria)
+                receitas_mes = receitas.filter(data_pagamento__month=mes, categoria=categoria)
+
+                total_despesas = despesas_mes.aggregate(total=Sum('valor'))['total'] or 0
+                total_receitas = receitas_mes.aggregate(total=Sum('valor'))['total'] or 0
+                total_mes = total_despesas + total_receitas
+                relatorio[grupo.nome][categoria.nome][mes] = {
+                    'total_mes': total_mes,
+                }  
+
+    context = {
+        'contas': contas,
+        'relatorio': relatorio,
     }
     return render(request, template_name, context)
 

@@ -29,6 +29,7 @@ from .views import (
     Transferencia,
     CartoesList,
     extrato_list,
+    extrato_mensal,
     definir_planejamento,
     update_valor_categoria,
     ver_planejamento,
@@ -76,6 +77,7 @@ urlpatterns = [
     path('cartoes/', CartoesList, name='cartoes'),
     # extratos
     path('extrato_list/', extrato_list, name='extrato-list'), 
+    path('extrato_mensal/', extrato_mensal, name='extrato-mensal'), 
      # ḉanejamento
     path('definir_planejamento/', definir_planejamento, name='definir_planejamento'), 
     path('update_valor_categoria/<int:id>', update_valor_categoria, name="update_valor_categoria"),
