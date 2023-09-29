@@ -32,6 +32,7 @@ Sistema - Financeiro - Planejamento
                             <th scope="col" class="text-end">Valor Planejado</th>
                             <th scope="col" class="text-end">Valor Realizado</th>
                             <th scope="col" class="text-end">Percentual</th>
+                            <th scope="col" class="text-end">Progresso</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,15 +43,20 @@ Sistema - Financeiro - Planejamento
                             {% for cat in grupo.grupos.all %}
                             <tr> 
                                 <td></td>
-                                <td class="table-col-nome">{{ cat.nome}}</td>
+                                <td class="table-col-categoria">{{ cat.nome}}</td>
                                 <td class="text-end fw-bold">
-                                    <span class="text-success">{{ cat.valor_planejamento | floatformat:2 }}</span>
+                                    {{ cat.valor_planejamento | floatformat:2 }}
                                 </td>
                                 <td class="text-end fw-bold">
-                                    <span class="text-success">{{ cat.total_gasto | floatformat:2 }}</span>
+                                    {{ cat.total_gasto | floatformat:2 }}
                                 </td>    
                                 <td class="text-end fw-bold">
-                                    <span class="text-success">{{ cat.calcula_percentual_gasto_por_categoria  | floatformat:2 }} %</span>
+                                    {{ cat.calcula_percentual_gasto_por_categoria|floatformat:2 }} %
+                                </td> 
+                                <td class="table-col-progresso">
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Success example" style="width: {{cat.calcula_percentual_gasto_por_categoria|floatformat:0}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>                                
                                 </td> 
                             </tr>
                             {% endfor %}
@@ -58,13 +64,14 @@ Sistema - Financeiro - Planejamento
                                 <td></td>
                                 <td>Total do Grupo : {{ grupo.nome }}</td>
                                 <td class="text-end fw-bold">
-                                    <span class="text-success">{{ grupo.total_planejamento_grupo | floatformat:2 }}</span>
+                                {{ grupo.total_planejamento_grupo | floatformat:2 }}                                </td>
+                                <td class="text-end fw-bold">
+                                {{ grupo.total_gasto_grupo | floatformat:2 }}                                </td>
+                                <td class="text-end fw-bold">
+                                    {% comment %}{{ grupo.total_gasto_grupo | floatformat:2 }}{% endcomment %}
                                 </td>
                                 <td class="text-end fw-bold">
-                                    <span class="text-success">{{ grupo.total_gasto_grupo | floatformat:2 }}</span>
-                                </td>
-                                <td class="text-end fw-bold">
-                                    {% comment %} <span class="text-success">{{ grupo.total_gasto_grupo | floatformat:2 }}</span> {% endcomment %}
+                                    {% comment %}{{ grupo.total_gasto_grupo | floatformat:2 }}{% endcomment %}
                                 </td>
                             </tr>
                         {% endfor %}

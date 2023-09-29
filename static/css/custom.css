@@ -67,6 +67,16 @@
     text-align: right;
 }
 
+.table-col-categoria {
+    width: 200px;
+    min-width: 150px;
+}
+
+.table-col-progresso {
+    width: 200px;
+    min-width: 100px;
+}
+
 .tr-grupo {
     background-color: #c5c2c2;
     font-size: large;
