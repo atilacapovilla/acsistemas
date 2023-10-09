@@ -14,41 +14,28 @@ Sistema - Financeiro - Extratos
         <li class="breadcrumb-item"><a href="{% url 'sistema:home' %}">Home</a></li>
         <li class="breadcrumb-item"><a href="{% url 'sistema:sistema' %}">Aplicações</a></li>
         <li class="breadcrumb-item"><a href="{% url 'financeiro:financeiro' %}">Financeiro</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Extrato Mensal Grupo e Categoria</li>
+        <li class="breadcrumb-item"><a href="{% url 'financeiro:extrato-mensal' %}">Extrato Mensal Grupo e Categoria</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Extrato Mensal da Categoria por Pessoa</li>
         </ol>
     </nav>
+     
     <div class="card shadow mb-5">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center"> 
-                Extrato Mensal Por Categorias
-                <form class="d-flex gap-3 mt-2" action="{% url 'financeiro:extrato-mensal' %}" method="GET">          
-                    <input name="ano" 
-                        type="numeric" 
-                        value="{{request.GET.ano}}" 
-                        class="form-control me-2"
-                        placeholder="Informe o ano"> 
-                    <select class="form-select" name="conta">
-                        <option value= "" selected> Todas as contas </option>
-                        {% for conta in contas %}
-                            <option value= "{{conta.id}}" > {{conta}} </option>
-                        {% endfor %}
-                    </select>
-                    {% if request.GET.ano %}   
-                    <a class="btn btn-primary" href="{% url 'financeiro:extrato-mensal' %}">Reset</a>                 
-                    {% endif %}  
-                    <button type="submit" class="btn btn-primary">Buscar</button> 
-                </form> 
+                Extrato Mensal : {{ categoria }} 
+                <button class="btn btn-primary" onclick="voltarParaPaginaAnterior()">
+                    <i class="bi bi-arrow-left-circle"></i>
+                    Voltar para o Extrato Grupo e Categoria
+                </button>
             </div>
         </div>
         <div class="card-body">
-            {% if relatorio %}
+            {% if relatorio_pessoa %}
             <div class="table-responsive">
-                <table class="table table-sm table-hover">
+                <table class="table table-sm table-hover table-bordered">
                     <thead>
                         <tr>
-                            <th scope="col">Grupo</th>
-                            <th scope="col">Categoria</th>
-                            <th scope="col"></th>
+                            <th scope="col">Pessoa</th>
                             <th scope="col" class="text-end">Janeiro</th>
                             <th scope="col" class="text-end">Fevereiro</th>
                             <th scope="col" class="text-end">Março</th>
@@ -64,22 +51,9 @@ Sistema - Financeiro - Extratos
                         </tr>
                     </thead>
                     <tbody class="table-group-divider">
-                        {% for grupo, categorias in relatorio.items %}
-                            <tr class="text-primary fs-5">
-                                <td colspan="14">{{ grupo }}</td>
-                            </tr>
-                            {% for categoria, meses in categorias.items %}
-                                <tr>
-                                    <td scope="row"></td>
-                                    <td scope="row">{{categoria }}</td>
-                                    <td>
-                                        <a 
-                                        {% comment %} type="button"  {% endcomment %}
-                                        {% comment %} class="btn btbtn-primary"  {% endcomment %}
-                                            href="{% url 'financeiro:extrato_categoria_pessoa' categoria.id %}">
-                                            <i class="bi bi-search"></i>
-                                        </a>
-                                    </td>
+                        {% for pessoa, meses in relatorio_pessoa.items %}
+                            <tr>
+                                <td scope="row">{{ pessoa }}</td>
                                     {% for mes, valores in meses.items %} 
                                         <td class="text-end fw-bold">
                                             {% if valores.total_mes == 0 %}
@@ -89,8 +63,7 @@ Sistema - Financeiro - Extratos
                                             {% endif %}
                                         </td>
                                     {% endfor %}
-                                </tr>
-                            {% endfor %}
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -101,3 +74,11 @@ Sistema - Financeiro - Extratos
         </div>
     </div>
 {% endblock %}
+
+{% block scripts %}
+<script>
+    function voltarParaPaginaAnterior() {
+        window.history.back(); // Isso navegará para a página anterior na história do navegador
+    }    
+</script>
+{% endblock scripts %}

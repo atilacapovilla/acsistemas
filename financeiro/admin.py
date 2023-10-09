@@ -1,16 +1,10 @@
 from django.contrib import admin
-from .models import Tipo, Grupo, Categoria, Conta, Pessoa, Movimento
-
-
-@admin.register(Tipo)
-class Tipo(admin.ModelAdmin):
-    list_display = ('ordem', 'nome')
-    
+from .models import Grupo, Categoria, Conta, Pessoa, Movimento
 
 @admin.register(Grupo)
-class Grupo(admin.ModelAdmin):
+class GrupoAdmin(admin.ModelAdmin):
     list_display = ('tipo', 'nome')
-    
+
 @admin.register(Categoria)
 class CategoriaAdmin(admin.ModelAdmin):
     list_display = ('tipo', 'grupo', 'nome', 'valor_planejamento')

@@ -20,9 +20,8 @@ from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
 
 
-from .models import Tipo, Grupo, Categoria, Conta, Pessoa, Movimento
+from .models import Grupo, Categoria, Conta, Pessoa, Movimento
 from financeiro.forms import (
-    TipoModelForm,
     GrupoModelForm,
     CategoriaModelForm, 
     ContaModelForm,
@@ -110,65 +109,6 @@ def financeiro(request):
         'data_pessoa': data_pessoa,
     }
     return render(request, 'financeiro/financeiro.html', context)
-
-##### Tipo de Categoria #####
-class TipoList(LoginRequiredMixin, ListView):
-    model = Tipo
-    context_object_name = 'tipos'
-    template_name = 'financeiro/tipo/list.html'
-    paginate_by = 50
-
-    def get_queryset(self):
-        tipos = Tipo.objects.filter(usuario=self.request.user).order_by('ordem', 'nome')
-        search = self.request.GET.get('search')
-        if search:
-            tipos = tipos.filter(nome__icontains=search)
-        return tipos
-
-class TipoCreate(LoginRequiredMixin, CreateView):
-    model = Tipo
-    form_class = TipoModelForm
-    template_name = 'financeiro/tipo/form.html'
-    success_url = reverse_lazy('financeiro:tipos')
-
-    def form_valid(self, form):
-        form.instance.usuario = self.request.user
-        messages.success(self.request, 'O Tipo foi criado com sucesso')
-        return super(TipoCreate, self).form_valid(form)    
-
-class TipoUpdate(LoginRequiredMixin, UpdateView):
-    model = Tipo
-    form_class = TipoModelForm
-    template_name = 'financeiro/tipo/form.html'
-    success_url = reverse_lazy('financeiro:tipos')
-
-    def form_valid(self, form):
-        messages.success(self.request, 'O Tipo foi alterado com sucesso')
-        return super(TipoUpdate, self).form_valid(form)   
-
-    def get_queryset(self):
-        base_qs = super(TipoUpdate, self).get_queryset()
-        return base_qs.filter(usuario=self.request.user)
-
-class TipoDelete(LoginRequiredMixin, DeleteView):
-    model = Tipo
-    template_name = 'financeiro/tipo/confirm_delete.html'
-    success_url = reverse_lazy('financeiro:tipos')
-
-    def form_valid(self, form):
-        messages.success(self.request, 'O Tipo foi excluido com sucesso')
-        return super(TipoDelete, self).form_valid(form)   
-    
-    def post(self, request, *args, **kwargs):
-        try:
-            return self.delete(request, *args, **kwargs)
-        except ProtectedError:
-            messages.error(request, 'Não é possível excluir este Tipo porque ele é referenciado por meio de chave protegida')
-            return redirect('financeiro:tipos')
-
-    def get_queryset(self):
-        base_qs = super(TipoDelete, self).get_queryset()
-        return base_qs.filter(usuario=self.request.user)
 
 
 ##### Grupo de Categoria #####
@@ -613,6 +553,7 @@ def CartoesList(request):
 
     return render(request, template_name, context)
 
+@login_required
 def extrato_list(request):
     template_name = 'financeiro/extrato/extrato_list.html'
     contas = Conta.objects.filter(usuario=request.user).order_by('nome')
@@ -646,10 +587,11 @@ def extrato_list(request):
     }
     return render(request, template_name, context)
 
+@login_required
 def extrato_mensal(request):
     template_name = 'financeiro/extrato/extrato_mensal.html'
     contas = Conta.objects.filter(usuario=request.user).order_by('nome')
-    grupos = Grupo.objects.filter(usuario=request.user).exclude(tipo='T').order_by('tipo', '-nome')
+    grupos = Grupo.objects.filter(usuario=request.user).exclude(tipo='T').order_by('tipo', 'nome')
 
     ano = request.GET.get('ano')
     conta = request.GET.get('conta')
@@ -673,9 +615,9 @@ def extrato_mensal(request):
 
     relatorio = {}
     for grupo in grupos:
-        relatorio[grupo.nome]= {}
+        relatorio[grupo]= {}
         for categoria in grupo.grupos.all():
-            relatorio[grupo.nome][categoria.nome]= {}  
+            relatorio[grupo][categoria]= {}  
             for mes in range(1 , 13):
                 despesas_mes = despesas.filter(data_pagamento__month=mes, categoria=categoria)
                 receitas_mes = receitas.filter(data_pagamento__month=mes, categoria=categoria)
@@ -683,16 +625,53 @@ def extrato_mensal(request):
                 total_despesas = despesas_mes.aggregate(total=Sum('valor'))['total'] or 0
                 total_receitas = receitas_mes.aggregate(total=Sum('valor'))['total'] or 0
                 total_mes = total_despesas + total_receitas
-                relatorio[grupo.nome][categoria.nome][mes] = {
+                relatorio[grupo][categoria][mes] = {
                     'total_mes': total_mes,
                 }  
-
+    
     context = {
         'contas': contas,
         'relatorio': relatorio,
     }
     return render(request, template_name, context)
 
+@login_required
+def extrato_categoria_pessoa(request, id):
+    template_name = 'financeiro/extrato/extrato_categoria_pessoa.html'
+    categoria = Categoria.objects.get(id = id)
+
+    ano = request.GET.get('ano')
+   
+    if not ano:
+        today = date.today()
+        ano = today.year
+
+    transacoes = Movimento.objects.filter(
+        usuario=request.user, 
+        data_pagamento__year=ano, 
+        categoria__id = id
+        )
+    
+    pessoas = transacoes.order_by().values_list('pessoa', 'pessoa__nome').distinct()
+
+    relatorio_pessoa = {}
+    for codigo, nome in pessoas:
+        relatorio_pessoa[nome]= {}  
+        for mes in range(1 , 13):
+            total = transacoes.filter(data_pagamento__month=mes, pessoa=codigo)
+            total_mes = total.aggregate(total=Sum('valor'))['total'] or 0
+            relatorio_pessoa[nome][mes] = {
+                'total_mes': total_mes,
+            }  
+
+    context = {
+        'relatorio_pessoa': relatorio_pessoa,
+        'categoria' : categoria,
+    }
+    return render(request, template_name, context)
+
+
+@login_required
 def definir_planejamento(request):
     template_name = 'financeiro/planejamento/definir_planejamento.html'
     excludes = ['I', 'T']
@@ -712,6 +691,7 @@ def update_valor_categoria(request, id):
 
     return JsonResponse({'status': 'Sucesso'})
 
+@login_required
 def ver_planejamento(request):
     template_name = 'financeiro/planejamento/ver_planejamento.html'
     excludes = ['I', 'T']

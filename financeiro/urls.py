@@ -1,10 +1,6 @@
 from django.urls import path
 from .views import (
     financeiro,
-    TipoList,
-    TipoCreate,
-    TipoUpdate,
-    TipoDelete,
     GrupoList,
     GrupoCreate,
     GrupoUpdate, 
@@ -30,6 +26,7 @@ from .views import (
     CartoesList,
     extrato_list,
     extrato_mensal,
+    extrato_categoria_pessoa,
     definir_planejamento,
     update_valor_categoria,
     ver_planejamento,
@@ -39,11 +36,6 @@ app_name = 'financeiro'
 
 urlpatterns = [
     path('', financeiro, name='financeiro'),
-    # Tipo
-    path('tipos/', TipoList.as_view(), name='tipos'),
-    path('tipo/create/', TipoCreate.as_view(), name='tipo-create'),
-    path('tipo/update/<int:pk>', TipoUpdate.as_view(), name='tipo-update'),
-    path('tipo/delete/<int:pk>', TipoDelete.as_view(), name='tipo-delete'),
     # Grupo
     path('grupos/', GrupoList.as_view(), name='grupos'),
     path('grupo/create/', GrupoCreate.as_view(), name='grupo-create'),
@@ -78,6 +70,7 @@ urlpatterns = [
     # extratos
     path('extrato_list/', extrato_list, name='extrato-list'), 
     path('extrato_mensal/', extrato_mensal, name='extrato-mensal'), 
+    path('extrato_categoria_pessoa/<int:id>', extrato_categoria_pessoa, name='extrato_categoria_pessoa'), 
      # ḉanejamento
     path('definir_planejamento/', definir_planejamento, name='definir_planejamento'), 
     path('update_valor_categoria/<int:id>', update_valor_categoria, name="update_valor_categoria"),

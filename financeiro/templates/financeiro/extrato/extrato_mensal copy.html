@@ -14,7 +14,7 @@ Sistema - Financeiro - Extratos
         <li class="breadcrumb-item"><a href="{% url 'sistema:home' %}">Home</a></li>
         <li class="breadcrumb-item"><a href="{% url 'sistema:sistema' %}">Aplicações</a></li>
         <li class="breadcrumb-item"><a href="{% url 'financeiro:financeiro' %}">Financeiro</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Extrato Mensal Grupo e Categoria</li>
+        <li class="breadcrumb-item active" aria-current="page">Extratos</li>
         </ol>
     </nav>
     <div class="card shadow mb-5">
@@ -43,12 +43,11 @@ Sistema - Financeiro - Extratos
         <div class="card-body">
             {% if relatorio %}
             <div class="table-responsive">
-                <table class="table table-sm table-hover">
+                <table class="table table-sm table-hover table-bordered">
                     <thead>
                         <tr>
                             <th scope="col">Grupo</th>
                             <th scope="col">Categoria</th>
-                            <th scope="col"></th>
                             <th scope="col" class="text-end">Janeiro</th>
                             <th scope="col" class="text-end">Fevereiro</th>
                             <th scope="col" class="text-end">Março</th>
@@ -70,16 +69,8 @@ Sistema - Financeiro - Extratos
                             </tr>
                             {% for categoria, meses in categorias.items %}
                                 <tr>
-                                    <td scope="row"></td>
+                                    <td></td>
                                     <td scope="row">{{categoria }}</td>
-                                    <td>
-                                        <a 
-                                        {% comment %} type="button"  {% endcomment %}
-                                        {% comment %} class="btn btbtn-primary"  {% endcomment %}
-                                            href="{% url 'financeiro:extrato_categoria_pessoa' categoria.id %}">
-                                            <i class="bi bi-search"></i>
-                                        </a>
-                                    </td>
                                     {% for mes, valores in meses.items %} 
                                         <td class="text-end fw-bold">
                                             {% if valores.total_mes == 0 %}
