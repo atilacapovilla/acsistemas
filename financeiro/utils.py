@@ -44,10 +44,10 @@ def atualiza_saldo(usuario):
 def calcula_balanco(usuario, ano, mes):
     transacoes = Movimento.objects\
         .filter(usuario=usuario, data_pagamento__year=ano, data_pagamento__month=mes)
-    despesas = transacoes.filter(tipo='D').exclude(categoria__tipo='TR').aggregate(Sum('valor'))['valor__sum']
+    despesas = transacoes.filter(tipo='D').exclude(categoria__grupo__tipo='T').aggregate(Sum('valor'))['valor__sum']
     if despesas == None:
         despesas = 0
-    receitas = transacoes.filter(tipo='R').exclude(categoria__tipo='TR').aggregate(Sum('valor'))['valor__sum']
+    receitas = transacoes.filter(tipo='R').exclude(categoria__grupo__tipo='T').aggregate(Sum('valor'))['valor__sum']
     if receitas == None:
         receitas = 0
     balanco = receitas - despesas

@@ -56,10 +56,10 @@ def financeiro(request):
 
     categorias = Categoria.objects.filter(usuario=request.user).order_by('nome')
     categoria_id = request.GET.get('categoria_id')
-    if not categoria_id:
-        cat = categorias[0]
-        categoria_id = cat.id
-    categoria = Categoria.objects.get(id=categoria_id)
+    if categoria_id:
+       categoria = Categoria.objects.get(id=categoria_id)
+    else:
+        categoria = None
     contas, saldo_total, contas_outras= atualiza_saldo(request.user)
     receitas, despesas, balanco = calcula_balanco(request.user, ano, mes)
     despesas_fluxo, receitas_fluxo, saldo_pendentes = calcula_pendentes(saldo_total, request.user)
@@ -119,7 +119,7 @@ class GrupoList(LoginRequiredMixin, ListView):
     paginate_by = 50
 
     def get_queryset(self):
-        grupos = Grupo.objects.filter(usuario=self.request.user).order_by('tipo', 'nome')
+        grupos = Grupo.objects.filter(usuario=self.request.user).order_by('tipo', 'ordem', 'nome')
         search = self.request.GET.get('search')
         if search:
             grupos = grupos.filter(nome__icontains=search)
@@ -179,7 +179,7 @@ class CategoriaList(LoginRequiredMixin, ListView):
     paginate_by = 50
 
     def get_queryset(self):
-        categorias = Categoria.objects.filter(usuario=self.request.user).order_by('nome')
+        categorias = Categoria.objects.filter(usuario=self.request.user).order_by('grupo_id','nome')
         search = self.request.GET.get('search')
         if search:
             categorias = categorias.filter(nome__icontains=search)
@@ -591,7 +591,7 @@ def extrato_list(request):
 def extrato_mensal(request):
     template_name = 'financeiro/extrato/extrato_mensal.html'
     contas = Conta.objects.filter(usuario=request.user).order_by('nome')
-    grupos = Grupo.objects.filter(usuario=request.user).exclude(tipo='T').order_by('tipo', 'nome')
+    grupos = Grupo.objects.filter(usuario=request.user).exclude(tipo='T').order_by('id', 'tipo', 'nome')
 
     ano = request.GET.get('ano')
     conta = request.GET.get('conta')

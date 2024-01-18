@@ -39,14 +39,21 @@ Sistema - Financeiro - Categoria
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                {{ form.tipo | as_crispy_field }}
+                                {{ form.grupo | as_crispy_field }}
                             </div>
-                        </div> 
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                {{ form.grupo | as_crispy_field }}
+                                {{ form.tipo | as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {{ form.essencial | as_crispy_field }}
                             </div>
                         </div>
                     </div>

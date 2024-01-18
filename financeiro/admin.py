@@ -3,11 +3,11 @@ from .models import Grupo, Categoria, Conta, Pessoa, Movimento
 
 @admin.register(Grupo)
 class GrupoAdmin(admin.ModelAdmin):
-    list_display = ('tipo', 'nome')
+    list_display = ('ordem', 'tipo', 'nome')
 
 @admin.register(Categoria)
 class CategoriaAdmin(admin.ModelAdmin):
-    list_display = ('tipo', 'grupo', 'nome', 'valor_planejamento')
+    list_display = ('grupo', 'nome', 'tipo', 'essencial', 'valor_planejamento')
     
 @admin.register(Conta)
 class ContaAdmin(admin.ModelAdmin):
@@ -19,4 +19,4 @@ class PessoaAdmin(admin.ModelAdmin):
 
 @admin.register(Movimento)
 class MovimentoAdmin(admin.ModelAdmin):
-    list_display = ('data_vencimento', 'data_pagamento', 'conta', 'descricao', 'valor', 'tipo', 'usuario')
+    list_display = ('data_lancamento', 'data_vencimento', 'data_pagamento', 'conta', 'descricao', 'valor', 'tipo', 'usuario')

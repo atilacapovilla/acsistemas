@@ -30,7 +30,12 @@ Sistema - Financeiro - Movimento
             <form method="post" novalidate >
                 {% csrf_token %}
                 <div class="row">
-                <div class="col-md-4">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form.data_lancamento | as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
                         <div class="form-group">
                             {{ form.data_vencimento | as_crispy_field }}
                         </div>
@@ -40,13 +45,13 @@ Sistema - Financeiro - Movimento
                             {{ form.data_pagamento | as_crispy_field }}
                         </div>
                     </div> 
+                </div>
+                <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
                             {{ form.tipo | as_crispy_field }}
                         </div>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
                             {{ form.conta | as_crispy_field }}
@@ -57,21 +62,23 @@ Sistema - Financeiro - Movimento
                             {{ form.categoria | as_crispy_field }}
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
                             {{ form.pessoa | as_crispy_field }}
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            {{ form.descricao | as_crispy_field }}
-                        </div>
-                    </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             {{ form.valor | as_crispy_field }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            {{ form.descricao | as_crispy_field }}
                         </div>
                     </div>
                 </div>

@@ -7,7 +7,7 @@ from financeiro.models import Grupo, Categoria, Conta, Pessoa, Movimento
 class GrupoModelForm(forms.ModelForm):
     class Meta:
         model = Grupo
-        fields = ['tipo', 'nome' ]
+        fields = ['ordem', 'tipo', 'nome' ]
     
     def clean_nome(self):
         nome = self.cleaned_data.get('nome')
@@ -23,7 +23,7 @@ class CategoriaModelForm(forms.ModelForm):
         self.fields['grupo'].queryset = Grupo.objects.filter(usuario=usuario)
     class Meta:
         model = Categoria
-        fields = ['tipo', 'grupo', 'nome']
+        fields = ['grupo', 'tipo', 'nome', 'essencial']
     
     def clean_nome(self):
         nome = self.cleaned_data.get('nome')
@@ -66,12 +66,13 @@ class MovimentoModelForm(forms.ModelForm):
         self.fields['conta'].queryset = Conta.objects.filter(usuario=usuario)
         self.fields['categoria'].queryset = Categoria.objects.filter(usuario=usuario)
         self.fields['pessoa'].queryset = Pessoa.objects.filter(usuario=usuario)
-        
+
+    data_lancamento = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}),)    
     data_vencimento = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}),)
     data_pagamento = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}),required=False)
     class Meta:
         model = Movimento
-        fields = ['data_vencimento', 'data_pagamento', 'conta', 'categoria', 'pessoa', 'descricao', 'valor', 'tipo']
+        fields = ['data_lancamento', 'data_vencimento', 'data_pagamento', 'conta', 'categoria', 'pessoa', 'descricao', 'valor', 'tipo']
      
 class PagamentoModelForm(forms.ModelForm):
     data_pagamento = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}),required=False)

@@ -43,24 +43,38 @@ Sistema - Financeiro - Categorias
                 <table class="table table-sm table-hover">
                     <thead>
                         <tr>
-                            <th scope="col" class="table-col-nome">Nome</th>
-                            <th scope="col">Tipo</th>
                             <th scope="col">Grupo</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col" class="table-col-nome">Nome</th>
+                            <th scope="col" class='text-center'>Essencial</th>
                             <th scope="col" class="table-col-acoes">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for categoria in categorias %}
                         <tr>
-                            <td class="table-col-nome">{{ categoria.nome}}</td>
-                            <td>{{ categoria.get_tipo_display }}</td>
                             <td>{{ categoria.grupo }}</td>
+                            <td>{{ categoria.get_tipo_display }}</td>
+                            <td class="table-col-nome">{{ categoria.nome}}</td>
+                            <td class='text-center'>
+                                {% if categoria.essencial %}
+                                <span class="badge text-bg-success">
+                                    <i class="bi bi-check-lg me-2"></i>
+                                    Sim
+                                </span>
+                                {% else %}
+                                <span class="badge text-bg-danger">
+                                    <i class="bi bi-x-lg me-2"></i>
+                                    Não
+                                </span>
+                                {% endif %}
+                            </td>
                             <td class="table-col-acoes">
                                 <a href="{% url 'financeiro:categoria-update' categoria.id %}">
-                                    <i class="bi bi-pencil-square me-3"></i>
+                                    <i class="bi bi-pencil-square text-primary me-3"></i>
                                 </a>
                                 <a href="{% url 'financeiro:categoria-delete' categoria.id %}">
-                                    <i class="bi bi-trash"></i>
+                                    <i class="bi bi-trash text-danger"></i>
                                 </a>
                             </td>
                         </tr>

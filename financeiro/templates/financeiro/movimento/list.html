@@ -52,6 +52,7 @@ Sistema - Financeiro - Movimentos
                 <table class="table table-sm table-hover">
                     <thead>
                         <tr>
+                            <th scope="col">Lançamento</th>
                             <th scope="col">Vencimento</th>
                             <th scope="col">Pagamento</th>
                             <th scope="col">Conta</th>
@@ -66,7 +67,8 @@ Sistema - Financeiro - Movimentos
                     <tbody>
                         {% for movimento in page_obj  %}
                         <tr>
-                            <th scope="row">{{ movimento.data_vencimento | date:'d/m/Y'}}</th>
+                            <th scope="row">{{ movimento.data_lancamento | date:'d/m/Y'}}</th>
+                            <th>{{ movimento.data_vencimento | date:'d/m/Y'}}</th>
                             <td>{{ movimento.data_pagamento | date:'d/m/Y' }}</td>
                             <td>{{ movimento.conta }}</td>
                             <td>{{ movimento.categoria }}</td>

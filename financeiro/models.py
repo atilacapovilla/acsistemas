@@ -5,16 +5,18 @@ from datetime import datetime
 
 class Grupo(models.Model):
     TIPO_GRUPO_CHOICE = (
-        ('E', 'Entrada'),
-        ('I', 'Investimento'),
-        ('S', 'Saida'),
-        ('T', 'Tranferencia'),
+        ('1', 'Receita'),
+        ('2', 'Despesa'),
+        ('3', 'Investimento'),
+        ('4', 'Transferencia'),
     )
-    nome = models.CharField(max_length=50)
-    tipo = models.CharField(max_length=2, choices=TIPO_GRUPO_CHOICE, default='S')
+    ordem = models.SmallIntegerField()
+    nome = models.CharField(max_length=30)
+    tipo = models.CharField(max_length=1, choices=TIPO_GRUPO_CHOICE, default='2')
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
 
     def __str__(self):
         return self.nome
@@ -34,16 +36,14 @@ class Grupo(models.Model):
         ordering = ['tipo', 'nome']
 
 class Categoria(models.Model):
-    TIPO_CATEGORIA_CHOICE = (
-        ('FX', 'Fixa'),
-        ('VR', 'Variavel'),
-        ('TR', 'Tranferencia'),
-        ('RD', 'Rendimentos'),
+    TIPO_LANCAMENTO_CHOICE = (
+        ('1', 'Entrada'),
+        ('2', 'Saida'),
     )
-
-    tipo = models.CharField(max_length=2, choices=TIPO_CATEGORIA_CHOICE, default='VR')
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE, related_name='grupos')
-    nome = models.CharField(max_length=50)
+    nome = models.CharField(max_length=30)
+    tipo = models.CharField(max_length=1, choices=TIPO_LANCAMENTO_CHOICE, default='2')
+    essencial = models.BooleanField(default=False)
     valor_planejamento = models.DecimalField(max_digits=10, decimal_places=2, default='0.00')
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -110,6 +110,7 @@ class Movimento(models.Model):
         ('D', 'Despesa'),
         ('R', 'Receita'),
     )
+    data_lancamento = models.DateField(default=datetime.now)
     data_vencimento = models.DateField()
     data_pagamento = models.DateField(null=True, blank=True)
     conta = models.ForeignKey(Conta, on_delete=models.PROTECT)
@@ -126,4 +127,5 @@ class Movimento(models.Model):
         return f'{self.descricao} - {self.data_vencimento} - {self.data_pagamento} - {self.valor}'
     
     class Meta:
-        ordering = ['-data_vencimento', 'data_pagamento', 'tipo']
+        ordering = ['-data_lancamento', '-data_vencimento', 'data_pagamento', 'tipo']
+

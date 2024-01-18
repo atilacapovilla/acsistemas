@@ -30,7 +30,12 @@ Sistema - Financeiro - Grupo
                 <form method="post" novalidate>
                     {% csrf_token %}
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.ordem | as_crispy_field }}
+                            </div>
+                        </div> 
+                        <div class="col-md-6">
                             <div class="form-group">
                                 {{ form.tipo | as_crispy_field }}
                             </div>

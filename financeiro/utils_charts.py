@@ -8,7 +8,6 @@ def despesas_variaveis_ano(ano, mes, usuario):
     transacoes = Movimento.objects.filter(
         usuario=usuario,
         tipo='D',
-        categoria__tipo='VR',
         data_pagamento__year=ano,
     )
     transacoes = transacoes.values(
@@ -38,7 +37,7 @@ def despesas_variaveis_mes(ano, mes, usuario):
     queryset = Movimento.objects\
         .values('categoria__nome')\
         .annotate(total_despesas=Sum('valor'))\
-        .filter(usuario=usuario,tipo='D',categoria__tipo='VR',data_pagamento__year=ano, data_pagamento__month=mes)\
+        .filter(usuario=usuario,tipo='D',data_pagamento__year=ano, data_pagamento__month=mes)\
         .order_by('-total_despesas')
     
     for entry in queryset:
