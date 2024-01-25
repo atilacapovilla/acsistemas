@@ -43,6 +43,7 @@ Sistema - Financeiro - Extratos
                 <table class="table table-sm table-hover">
                     <thead>
                         <tr>
+                            <th scope="col">Lançamento</th>
                             <th scope="col">Vencimento</th>
                             <th scope="col">Pagamento</th>
                             <th scope="col">Conta</th>
@@ -56,7 +57,8 @@ Sistema - Financeiro - Extratos
                     <tbody>
                         {% for movimento in page_obj %}
                         <tr>
-                            <th scope="row">{{ movimento.data_vencimento | date:'d/m/Y'}}</th>
+                            <th scope="row">{{ movimento.data_lancamento | date:'d/m/Y'}}</th>
+                            <th>{{ movimento.data_vencimento | date:'d/m/Y'}}</th>
                             <td>{{ movimento.data_pagamento | date:'d/m/Y' }}</td>
                             <td>{{ movimento.conta }}</td>
                             <td>{{ movimento.categoria }}</td>
@@ -81,7 +83,7 @@ Sistema - Financeiro - Extratos
                         </tr>
                         {% endfor %}
                         <tr>
-                            <th scope="row" colspan="6" class="table-active">
+                            <th scope="row" colspan="7" class="table-active">
                                 Total de Receitas e Despesas ( exceto transferências )
                             </th>
                             <td class="text-end fw-bold table-active">

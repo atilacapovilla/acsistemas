@@ -44,7 +44,6 @@ Sistema - Financeiro - Categorias
                     <thead>
                         <tr>
                             <th scope="col">Grupo</th>
-                            <th scope="col">Tipo</th>
                             <th scope="col" class="table-col-nome">Nome</th>
                             <th scope="col" class='text-center'>Essencial</th>
                             <th scope="col" class="table-col-acoes">Ações</th>
@@ -54,7 +53,6 @@ Sistema - Financeiro - Categorias
                         {% for categoria in categorias %}
                         <tr>
                             <td>{{ categoria.grupo }}</td>
-                            <td>{{ categoria.get_tipo_display }}</td>
                             <td class="table-col-nome">{{ categoria.nome}}</td>
                             <td class='text-center'>
                                 {% if categoria.essencial %}

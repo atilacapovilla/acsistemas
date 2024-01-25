@@ -36,13 +36,8 @@ class Grupo(models.Model):
         ordering = ['tipo', 'nome']
 
 class Categoria(models.Model):
-    TIPO_LANCAMENTO_CHOICE = (
-        ('1', 'Entrada'),
-        ('2', 'Saida'),
-    )
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE, related_name='grupos')
     nome = models.CharField(max_length=30)
-    tipo = models.CharField(max_length=1, choices=TIPO_LANCAMENTO_CHOICE, default='2')
     essencial = models.BooleanField(default=False)
     valor_planejamento = models.DecimalField(max_digits=10, decimal_places=2, default='0.00')
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)

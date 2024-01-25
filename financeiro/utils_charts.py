@@ -1,28 +1,23 @@
 from django.db.models import Sum
 from .models import Movimento
 
-def despesas_variaveis_ano(ano, mes, usuario):
+def despesas_ano(ano, mes, usuario):
     labels_ano = []
     data_ano = []
     tabela_meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez',]
-    transacoes = Movimento.objects.filter(
-        usuario=usuario,
-        tipo='D',
-        data_pagamento__year=ano,
-    )
-    transacoes = transacoes.values(
-        'data_pagamento__month').annotate(total_despesas=Sum('valor')).order_by('data_pagamento__month')
+    transacoes = Movimento.objects\
+        .filter(usuario=usuario,tipo='D', data_lancamento__year=ano,)\
+        .exclude(categoria__grupo__tipo='3')\
+        .exclude(categoria__grupo__tipo='4')
+        
+    transacoes = transacoes\
+        .values('data_lancamento__month')\
+        .annotate(total_despesas=Sum('valor'))\
+        .order_by('data_lancamento__month')
     
-    # teste = transacoes.values(
-    #     'categoria__grupo__nome','categoria__nome','data_pagamento__month').annotate(
-    #         total_despesas=Sum('valor')).order_by(
-    #             'categoria__grupo__nome', 'categoria__nome', 'data_pagamento__month')
-    # for t in teste:
-    #     print(t['categoria__grupo__nome'],t['categoria__nome'], t['data_pagamento__month'], t['total_despesas'])
-
 
     for entry in transacoes:
-        mes = entry['data_pagamento__month']
+        mes = entry['data_lancamento__month']
         mes_str = tabela_meses[mes - 1]
         labels_ano.append(mes_str)
         data_ano.append(int(entry['total_despesas']))
@@ -30,18 +25,20 @@ def despesas_variaveis_ano(ano, mes, usuario):
     return labels_ano, data_ano
 
 
-def despesas_variaveis_mes(ano, mes, usuario):
+def despesas_mes(ano, mes, usuario):
     labels = []
     data = []
     
     queryset = Movimento.objects\
-        .values('categoria__nome')\
+        .values('categoria__grupo__nome', 'categoria__grupo__tipo')\
         .annotate(total_despesas=Sum('valor'))\
-        .filter(usuario=usuario,tipo='D',data_pagamento__year=ano, data_pagamento__month=mes)\
+        .filter(usuario=usuario,tipo='D',data_lancamento__year=ano, data_lancamento__month=mes)\
+        .exclude(categoria__grupo__tipo='3')\
+        .exclude(categoria__grupo__tipo='4')\
         .order_by('-total_despesas')
     
     for entry in queryset:
-        labels.append(entry['categoria__nome'])
+        labels.append(entry['categoria__grupo__nome'])
         data.append(int(entry['total_despesas']))
     
     return labels, data

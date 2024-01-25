@@ -38,8 +38,8 @@ from .utils import (
     baixa_cartoes,
 )
 from .utils_charts import (
-    despesas_variaveis_ano, 
-    despesas_variaveis_mes, 
+    despesas_ano, 
+    despesas_mes, 
     despesas_categoria_ano,
     despesas_pessoas_categoria_ano,
 )
@@ -65,11 +65,11 @@ def financeiro(request):
     despesas_fluxo, receitas_fluxo, saldo_pendentes = calcula_pendentes(saldo_total, request.user)
     vencidos = calcula_vencidos_não_pagos(request.user)
      # graficos despesas mes
-    labels, data = despesas_variaveis_mes(ano, mes, request.user)
+    labels, data = despesas_mes(ano, mes, request.user)
     labels_mes = json.dumps(labels)
     data_mes = json.dumps(data)
     # graficos variaveis ano
-    labels, data = despesas_variaveis_ano(ano, mes, request.user)
+    labels, data = despesas_ano(ano, mes, request.user)
     labels_ano = json.dumps(labels)
     data_ano = json.dumps(data)
     # graficos categorias no ano
@@ -179,7 +179,9 @@ class CategoriaList(LoginRequiredMixin, ListView):
     paginate_by = 50
 
     def get_queryset(self):
-        categorias = Categoria.objects.filter(usuario=self.request.user).order_by('grupo_id','nome')
+        categorias = Categoria.objects\
+            .filter(usuario=self.request.user)\
+            .order_by('grupo__ordem','nome')
         search = self.request.GET.get('search')
         if search:
             categorias = categorias.filter(nome__icontains=search)
@@ -370,8 +372,9 @@ def MovimentoList(request):
         data_inicio = date(today.year, today.month, 1)
         data_final = data_inicio.replace(day=monthrange(data_inicio.year, data_inicio.month)[1])
 
-    movimento = Movimento.objects.filter(
-        usuario=request.user, data_vencimento__range=[data_inicio, data_final]).order_by('-data_vencimento', '-created_at')
+    movimento = Movimento.objects\
+        .filter(usuario=request.user, data_lancamento__range=[data_inicio, data_final])\
+        .order_by('-data_lancamento', '-created_at')
     
     if conta:
         movimento = movimento.filter(conta__id=conta)
@@ -391,7 +394,7 @@ class MovimentoCreate(LoginRequiredMixin, CreateView):
     model = Movimento
     form_class = MovimentoModelForm
     template_name = 'financeiro/movimento/form.html'
-    success_url = reverse_lazy('financeiro:movimentos')
+    success_url = reverse_lazy('financeiro:movimento-create')
 
     def get_initial(self):
         return {'usuario':self.request.user}
@@ -503,7 +506,7 @@ def CartoesList(request):
 
     contas = Conta.objects.filter(usuario=request.user, tipo='CT').order_by('nome')
     contas_debito = Conta.objects.filter(usuario=request.user, tipo='CC').order_by('nome')
-    categorias = Categoria.objects.filter(usuario=request.user, tipo='TR')
+    categorias = Categoria.objects.filter(usuario=request.user, grupo__tipo='4')
     pessoas = Pessoa.objects.filter(usuario=request.user).order_by('nome')
     
     if request.method == 'GET':
@@ -567,14 +570,23 @@ def extrato_list(request):
         data_inicio = date(today.year, today.month, 1)
         data_final = data_inicio.replace(day=monthrange(data_inicio.year, data_inicio.month)[1])
 
-    movimento = Movimento.objects.filter(
-        usuario=request.user, data_vencimento__range=[data_inicio, data_final]).order_by('data_vencimento')
+    movimento = Movimento.objects\
+        .filter(usuario=request.user, data_lancamento__range=[data_inicio, data_final])\
+        .order_by('data_lancamento')
     
     if conta:
         movimento = movimento.filter(conta__id=conta)
         
-    despesas = movimento.filter(tipo='D').exclude(categoria__tipo='TR').aggregate(Sum('valor'))['valor__sum']
-    receitas = movimento.filter(tipo='R').exclude(categoria__tipo='TR').aggregate(Sum('valor'))['valor__sum']
+    despesas = movimento\
+        .filter(tipo='D')\
+        .exclude(categoria__grupo__tipo='3')\
+        .exclude(categoria__grupo__tipo='4')\
+        .aggregate(Sum('valor'))['valor__sum']
+    receitas = movimento\
+        .filter(tipo='R')\
+        .exclude(categoria__grupo__tipo='3')\
+        .exclude(categoria__grupo__tipo='4')\
+        .aggregate(Sum('valor'))['valor__sum']
 
     paginator = Paginator(movimento, 50) 
     page_number = request.GET.get('page')
@@ -591,7 +603,7 @@ def extrato_list(request):
 def extrato_mensal(request):
     template_name = 'financeiro/extrato/extrato_mensal.html'
     contas = Conta.objects.filter(usuario=request.user).order_by('nome')
-    grupos = Grupo.objects.filter(usuario=request.user).exclude(tipo='T').order_by('id', 'tipo', 'nome')
+    grupos = Grupo.objects.filter(usuario=request.user).order_by('ordem',)
 
     ano = request.GET.get('ano')
     conta = request.GET.get('conta')
@@ -600,12 +612,8 @@ def extrato_mensal(request):
         today = date.today()
         ano = today.year
 
-    movimento = Movimento.objects.filter(
-        usuario=request.user, 
-        data_pagamento__year=ano
-        ).exclude(
-            categoria__tipo='TR'
-            )
+    movimento = Movimento.objects\
+        .filter(usuario=request.user, data_lancamento__year=ano)
     
     if conta:
         movimento = movimento.filter(conta__id=conta)
@@ -619,8 +627,8 @@ def extrato_mensal(request):
         for categoria in grupo.grupos.all():
             relatorio[grupo][categoria]= {}  
             for mes in range(1 , 13):
-                despesas_mes = despesas.filter(data_pagamento__month=mes, categoria=categoria)
-                receitas_mes = receitas.filter(data_pagamento__month=mes, categoria=categoria)
+                despesas_mes = despesas.filter(data_lancamento__month=mes, categoria=categoria)
+                receitas_mes = receitas.filter(data_lancamento__month=mes, categoria=categoria)
 
                 total_despesas = despesas_mes.aggregate(total=Sum('valor'))['total'] or 0
                 total_receitas = receitas_mes.aggregate(total=Sum('valor'))['total'] or 0
@@ -648,7 +656,7 @@ def extrato_categoria_pessoa(request, id):
 
     transacoes = Movimento.objects.filter(
         usuario=request.user, 
-        data_pagamento__year=ano, 
+        data_lancamento__year=ano, 
         categoria__id = id
         )
     
@@ -658,7 +666,7 @@ def extrato_categoria_pessoa(request, id):
     for codigo, nome in pessoas:
         relatorio_pessoa[nome]= {}  
         for mes in range(1 , 13):
-            total = transacoes.filter(data_pagamento__month=mes, pessoa=codigo)
+            total = transacoes.filter(data_lancamento__month=mes, pessoa=codigo)
             total_mes = total.aggregate(total=Sum('valor'))['total'] or 0
             relatorio_pessoa[nome][mes] = {
                 'total_mes': total_mes,

@@ -7,7 +7,7 @@ class GrupoAdmin(admin.ModelAdmin):
 
 @admin.register(Categoria)
 class CategoriaAdmin(admin.ModelAdmin):
-    list_display = ('grupo', 'nome', 'tipo', 'essencial', 'valor_planejamento')
+    list_display = ('grupo', 'nome', 'essencial', 'valor_planejamento')
     
 @admin.register(Conta)
 class ContaAdmin(admin.ModelAdmin):

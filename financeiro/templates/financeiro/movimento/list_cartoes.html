@@ -87,6 +87,7 @@ Sistema - Financeiro - Movimentos  Cartão de Crédito
             <table class="table table-sm table-hover">
                 <thead>
                     <tr>
+                        <th scope="col">Lançamento</th>
                         <th scope="col">Vencimento</th>
                         <th scope="col">Pagamento</th>
                         <th scope="col">Categoria</th>
@@ -98,6 +99,7 @@ Sistema - Financeiro - Movimentos  Cartão de Crédito
                 <tbody>
                     {% for cartao in cartoes %}
                     <tr>
+                        <th scope="row">{{ cartao.data_lancamento | date:'d/m/Y'}}</th>
                         <th scope="row">{{ cartao.data_vencimento | date:'d/m/Y'}}</th>
                         <td>{{ cartao.data_pagamento | date:'d/m/Y' }}</td>
                         <td>{{ cartao.categoria }}</td>

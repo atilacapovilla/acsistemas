@@ -23,7 +23,7 @@ class CategoriaModelForm(forms.ModelForm):
         self.fields['grupo'].queryset = Grupo.objects.filter(usuario=usuario)
     class Meta:
         model = Categoria
-        fields = ['grupo', 'tipo', 'nome', 'essencial']
+        fields = ['grupo', 'nome', 'essencial']
     
     def clean_nome(self):
         nome = self.cleaned_data.get('nome')
@@ -113,10 +113,9 @@ class TransferenciaForm(forms.Form):
     def __init__(self, user=None, *args, **kwargs):
         super(TransferenciaForm, self).__init__(*args, **kwargs)
         CONTA_OPTIONS = [(conta.id, conta) for conta in Conta.objects.filter(usuario=user)]
-        CATEGORIA_OPTIONS = [(categoria.id, categoria) for categoria in Categoria.objects.filter(usuario=user, tipo='TR')]
+        CATEGORIA_OPTIONS = [(categoria.id, categoria) for categoria in Categoria.objects.filter(usuario=user, grupo__tipo='4')]
         PESSOA_OPTIONS = [(pessoa.id, pessoa) for pessoa in Pessoa.objects.filter(usuario=user)]
         self.fields['conta_origem'].choices = CONTA_OPTIONS
         self.fields['conta_destino'].choices = CONTA_OPTIONS
         self.fields['categoria'].choices = CATEGORIA_OPTIONS
         self.fields['pessoa'].choices = PESSOA_OPTIONS
-
