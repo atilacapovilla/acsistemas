@@ -38,10 +38,8 @@ from .utils import (
     baixa_cartoes,
 )
 from .utils_charts import (
-    despesas_ano, 
     despesas_mes, 
-    despesas_categoria_ano,
-    despesas_pessoas_categoria_ano,
+    receitas_despesas_ano, 
 )
 
 @login_required
@@ -68,18 +66,11 @@ def financeiro(request):
     labels, data = despesas_mes(ano, mes, request.user)
     labels_mes = json.dumps(labels)
     data_mes = json.dumps(data)
-    # graficos variaveis ano
-    labels, data = despesas_ano(ano, mes, request.user)
+    # graficos receitas e despesas
+    labels, data_despesas, data_receitas = receitas_despesas_ano(ano, request.user)
     labels_ano = json.dumps(labels)
-    data_ano = json.dumps(data)
-    # graficos categorias no ano
-    labels, data = despesas_categoria_ano(ano, mes, categoria_id, request.user)
-    labels_categoria = json.dumps(labels)
-    data_categoria = json.dumps(data)
-    # graficos pessoas por categorias no mes
-    labels, data = despesas_pessoas_categoria_ano(ano, mes, categoria_id, request.user)
-    labels_pessoa = json.dumps(labels)
-    data_pessoa = json.dumps(data) 
+    data_despesas_ano = json.dumps(data_despesas)
+    data_receitas_ano = json.dumps(data_receitas)
     # data da consulta
     ano = int(ano)
     mes = int(mes)
@@ -97,19 +88,14 @@ def financeiro(request):
         'saldo_pendentes': saldo_pendentes,
         'vencidos': vencidos,
         'labels_ano': labels_ano,
-        'data_ano': data_ano,
+        'data_despesas_ano': data_despesas_ano,
+        'data_receitas_ano': data_receitas_ano,
         'labels_mes': labels_mes,
         'data_mes': data_mes,
         'data_consulta': data_consulta,
         'categorias': categorias,
-        'labels_categoria': labels_categoria,
-        'data_categoria': data_categoria,
-        'categoria': categoria,
-        'labels_pessoa': labels_pessoa,
-        'data_pessoa': data_pessoa,
     }
     return render(request, 'financeiro/financeiro.html', context)
-
 
 ##### Grupo de Categoria #####
 class GrupoList(LoginRequiredMixin, ListView):
